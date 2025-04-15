@@ -1,0 +1,52 @@
+expo-env.d.ts
+
+# Node modules
+node_modules/
+
+# Expo
+.expo/
+.expo-shared/
+
+# TypeScript
+*.tsbuildinfo
+
+# macOS
+.DS_Store
+
+# Log files
+*.log
+
+# Metro bundler cache
+.cache/
+
+# Babel cache
+babel.config.js
+
+# ESLint cache
+.eslintcache
+
+# VS Code settings
+.vscode/
+
+# Android
+android/.gradle
+android/app/build/
+android/.idea
+
+# iOS
+ios/Pods/
+ios/build/
+ios/.expo
+ios/Podfile.lock
+
+# Environment files
+.env
+.env.*
+
+# Testing
+coverage/
+
+# Misc
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

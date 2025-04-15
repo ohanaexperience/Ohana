@@ -1,0 +1,67 @@
+{
+  "expo": {
+    "name": "Ohana",
+    "slug": "ohanaapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "ohanaapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ohanaexperiences.expoapp",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+            "com.googleusercontent.apps.1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1"
+          ]
+          }
+        ]
+      }
+    },
+    "android": {
+      "package": "com.ohanaexperiences.expoapp",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1"
+        }
+      ],
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f30962b9-4591-4f81-84a8-8d16193c94e0"
+      }
+    },
+    "owner": "ohanaorg"
+  }
+}
