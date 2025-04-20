@@ -15,14 +15,26 @@
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
-            "com.googleusercontent.apps.1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1"
-          ]
+              "com.googleusercontent.apps.1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1",
+              "fb8762220613880930"
+            ]
           }
         ]
       }
     },
     "android": {
       "package": "com.ohanaexperiences.expoapp",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "com.ohanaexperiences.expoapp"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -38,6 +50,19 @@
         "@react-native-google-signin/google-signin",
         {
           "iosUrlScheme": "com.googleusercontent.apps.1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1"
+        }
+      ],
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "8762220613880930",
+          "clientToken": "934e68962fa8a9e616117867e2c84b6e",
+          "displayName": "Ohana",
+          "scheme": "fb8762220613880930",
+          "advertiserIDCollectionEnabled": false,
+          "autoLogAppEventsEnabled": false,
+          "isAutoInitEnabled": true,
+          "iosUserTrackingPermission": "This identifier will be used to deliver personalized ads to you."
         }
       ],
       "expo-router",

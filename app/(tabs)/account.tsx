@@ -14,6 +14,7 @@ import {
   FontAwesome,
 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useAuthStore } from '../store/auth';
 
 const profileOptions = [
   { id: '1', icon: 'credit-card', label: 'Payment', iconPack: 'MaterialIcons' },
@@ -40,22 +41,24 @@ const renderIcon = (icon: string, iconPack: string) => {
 };
 
 export default function ProfileScreen() {
-    const router = useRouter();
+  const router = useRouter();
+  const signOut = useAuthStore((s) => s.signOut);
 
   const handleOptionPress = (label: string) => {
     if (label === 'Settings') {
-        router.push('../settings'); // this will slide the modal up
+      router.push('../settings');
+    } else if (label === 'Upgrade to Host') {
+      router.push('/upgrade-to-host');
+    } else if (label === 'Upgrade to Business') {
+      router.push('/upgrade-to-business');
+    } else if (label === 'Log out') {
+      signOut();
+      router.replace('/');
     }
-    else if (label === 'Upgrade to Host'){
-        router.push('/upgrade-to-host');
-    } 
-    else if (label === 'Upgrade to Business'){
-        router.push('/upgrade-to-business');
-    } 
-    // add more handlers as needed
   };
+
   const user = {
-    name: 'Alice Johnson',
+    name: 'Alic Johnson',
     email: 'alice@example.com',
     avatar: 'https://i.pravatar.cc/150?img=32',
     rating: 4,
@@ -67,11 +70,9 @@ export default function ProfileScreen() {
       <Text style={styles.ratingText}>{rating.toFixed(1)}</Text>
     </View>
   );
-  
 
   return (
     <View style={styles.container}>
-      {/* Top Profile Row */}
       <View style={styles.profileRow}>
         <View style={styles.userInfo}>
           <Text style={styles.name}>{user.name}</Text>
@@ -80,7 +81,6 @@ export default function ProfileScreen() {
         <Image source={{ uri: user.avatar }} style={styles.avatar} />
       </View>
 
-      {/* List of Options */}
       <FlatList
         data={profileOptions}
         keyExtractor={(item) => item.id}
@@ -156,5 +156,5 @@ const styles = StyleSheet.create({
   ratingText: {
     fontSize: 12,
     fontWeight: '500',
-  },  
+  },
 });
