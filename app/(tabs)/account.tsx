@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import {
   FontAwesome,
 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useAuthStore } from '../store/auth';
+import { useAuthStore, useIsLoggedIn } from '../store/auth';
 
 const profileOptions = [
   { id: '1', icon: 'credit-card', label: 'Payment', iconPack: 'MaterialIcons' },
@@ -43,31 +43,33 @@ const renderIcon = (icon: string, iconPack: string) => {
 export default function ProfileScreen() {
   const router = useRouter();
   const signOut = useAuthStore((s) => s.signOut);
+  const user = useAuthStore((s) => s.user);
+  const isLoggedIn = useIsLoggedIn();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.replace('/signin');
+    }
+  }, [isLoggedIn]);
+
+  if (!user) return null;
 
   const handleOptionPress = (label: string) => {
     if (label === 'Settings') {
-      router.push('../settings');
+      router.push('/settings');
     } else if (label === 'Upgrade to Host') {
       router.push('/upgrade-to-host');
     } else if (label === 'Upgrade to Business') {
       router.push('/upgrade-to-business');
     } else if (label === 'Log out') {
       signOut();
-      router.replace('/');
     }
   };
 
-  const user = {
-    name: 'Alic Johnson',
-    email: 'alice@example.com',
-    avatar: 'https://i.pravatar.cc/150?img=32',
-    rating: 4,
-  };
-
-  const renderRatingBox = (rating: number) => (
+  const renderRatingBox = () => (
     <View style={styles.ratingBox}>
       <FontAwesome name="star" size={12} color="#f1c40f" style={{ marginRight: 4 }} />
-      <Text style={styles.ratingText}>{rating.toFixed(1)}</Text>
+      <Text style={styles.ratingText}>4.0</Text>
     </View>
   );
 
@@ -76,9 +78,9 @@ export default function ProfileScreen() {
       <View style={styles.profileRow}>
         <View style={styles.userInfo}>
           <Text style={styles.name}>{user.name}</Text>
-          {renderRatingBox(user.rating)}
+          {renderRatingBox()}
         </View>
-        <Image source={{ uri: user.avatar }} style={styles.avatar} />
+        <Image source={{ uri: user.photo ?? 'https://i.pravatar.cc/150?img=32' }} style={styles.avatar} />
       </View>
 
       <FlatList
@@ -113,10 +115,6 @@ const styles = StyleSheet.create({
   userInfo: {
     flex: 1,
     paddingRight: 16,
-  },
-  stars: {
-    flexDirection: 'row',
-    marginTop: 4,
   },
   avatar: {
     width: 80,

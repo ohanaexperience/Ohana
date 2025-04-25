@@ -3,13 +3,19 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LoginManager } from 'react-native-fbsdk-next';
 import { router } from 'expo-router';
 
+type AuthTokens = {
+  idToken: string;
+  accessToken: string;
+  refreshToken: string;
+};
+
 type AuthUser = {
   provider: 'google' | 'facebook';
-  idToken: string;
   id: string;
   email: string;
   name: string;
   photo: string | null;
+  tokens: AuthTokens;
 };
 
 type AuthState = {
@@ -33,9 +39,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
 
       set({ user: null });
-      router.replace('/'); // return to login screen
+      router.replace('/signin');
     } catch (err) {
       console.error('Sign out failed:', err);
     }
   },
 }));
+
+// Selector hook to use login status safely
+export const useIsLoggedIn = () => useAuthStore((state) => !!state.user);
