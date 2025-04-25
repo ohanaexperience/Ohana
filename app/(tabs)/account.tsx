@@ -48,7 +48,7 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      router.replace('/signin');
+      router.push('/signin');
     }
   }, [isLoggedIn]);
 

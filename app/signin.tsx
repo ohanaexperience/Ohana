@@ -1,17 +1,10 @@
-// app/signin.tsx
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-} from 'react-native';
-import { useRouter, Stack } from 'expo-router';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
+import { AntDesign } from '@expo/vector-icons';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { AccessToken, LoginManager, Profile } from 'react-native-fbsdk-next';
 import { useAuthStore } from './store/auth';
-import { FontAwesome, AntDesign } from '@expo/vector-icons';
 
 GoogleSignin.configure({
   webClientId: '1066232646154-6l2ujgt1vj65onuku5for4ec8pi5no6u.apps.googleusercontent.com',
@@ -37,13 +30,9 @@ export default function SignInScreen() {
             body: JSON.stringify({ idToken }),
           }
         );
-
-        if (!backendResponse.ok) {
-          throw new Error('Failed to verify token with backend');
-        }
+        if (!backendResponse.ok) throw new Error('Backend verification failed');
 
         const data = await backendResponse.json();
-
         useAuthStore.getState().setUser({
           provider: 'google',
           id: user.id,
@@ -56,10 +45,7 @@ export default function SignInScreen() {
             refreshToken: data.RefreshToken,
           },
         });
-
         router.replace('/(tabs)');
-      } else {
-        console.warn('Sign-in was cancelled or failed.');
       }
     } catch (err) {
       console.error('Google Sign-In Error:', err);
@@ -69,56 +55,59 @@ export default function SignInScreen() {
   const signInWithFacebook = async () => {
     try {
       const result = await LoginManager.logInWithPermissions(['public_profile']);
-      if (result.isCancelled) {
-        console.warn('Facebook login cancelled');
-        return;
-      }
+      if (result.isCancelled) return;
 
       const tokenData = await AccessToken.getCurrentAccessToken();
-      if (!tokenData) throw new Error('Failed to get access token');
-
+      if (!tokenData) throw new Error('Missing token');
       const profile = await Profile.getCurrentProfile();
-      if (!profile) throw new Error('Failed to get profile');
+      if (!profile) throw new Error('Missing profile');
+
+      // You can send tokenData.accessToken to backend here if needed
+
+      useAuthStore.getState().setUser({
+        provider: 'facebook',
+        id: profile.userID ?? '',
+        email: '',
+        name: profile.name ?? '',
+        photo: profile.imageURL ?? '',
+        tokens: {
+          idToken: tokenData.accessToken,
+          accessToken: tokenData.accessToken,
+          refreshToken: '',
+        },
+      });
 
       router.replace('/(tabs)');
     } catch (err) {
-      console.error('Facebook Login Error:', err);
+      console.error('Facebook Sign-In Error:', err);
     }
   };
 
   return (
-    <>
-      <Stack.Screen options={{ presentation: 'modal', title: 'Sign In' }} />
-      <View style={styles.container}>
-        <Text style={styles.title}>Welcome to Ohana</Text>
+    <View style={styles.container}>
+      {/* Dismiss Button */}
+      <TouchableOpacity style={styles.dismissButton} onPress={() => router.replace('/(tabs)')}>
+        <AntDesign name="close" size={24} color="#000" />
+      </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={signInWithGoogle}>
-          <AntDesign name="google" size={20} color="black" style={styles.icon} />
-          <Text style={styles.buttonText}>Continue with Google</Text>
-        </TouchableOpacity>
+      <Text style={styles.title}>Welcome to Ohana</Text>
 
-        <TouchableOpacity style={styles.button} onPress={signInWithFacebook}>
-          <FontAwesome name="facebook" size={20} color="black" style={styles.icon} />
-          <Text style={styles.buttonText}>Continue with Facebook</Text>
-        </TouchableOpacity>
-      </View>
-    </>
+      <TouchableOpacity style={styles.button} onPress={signInWithGoogle}>
+        <AntDesign name="google" size={20} color="#000" style={styles.icon} />
+        <Text style={styles.buttonText}>Continue with Google</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={signInWithFacebook}>
+        <AntDesign name="facebook-square" size={20} color="#000" style={styles.icon} />
+        <Text style={styles.buttonText}>Continue with Facebook</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    padding: 24,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 40,
-  },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', padding: 24 },
+  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 40 },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -129,8 +118,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: '#fff',
     marginTop: 16,
-    minWidth: 260,
-    justifyContent: 'center',
+    width: '100%',
+    maxWidth: 300,
   },
   icon: {
     marginRight: 12,
@@ -139,5 +128,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
+  },
+  dismissButton: {
+    position: 'absolute',
+    top: 60,
+    right: 24,
+    zIndex: 1,
   },
 });

@@ -46,7 +46,15 @@ export default function RootLayout() {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="signin"
+          options={{
+            presentation: 'modal', // makes it slide up
+            headerShown: false,    // we'll handle our own close button
+          }}
+        />
       </Stack>
+      
       <StatusBar style="auto" />
     </ThemeProvider>
     </GestureHandlerRootView>
