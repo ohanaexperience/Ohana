@@ -59,8 +59,6 @@ export default function ProfileScreen() {
       router.push('/settings');
     } else if (label === 'Upgrade to Host') {
       router.push('/upgrade-to-host');
-    } else if (label === 'Upgrade to Business') {
-      router.push('/upgrade-to-business');
     } else if (label === 'Log out') {
       signOut();
     }
