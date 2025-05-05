@@ -26,6 +26,11 @@
     },
     "android": {
       "package": "com.ohanaexperiences.expoapp",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB8MrjYdb3RrrvjlzHmi-6rPT-M5Dx1DUY"
+        }
+      },
       "intentFilters": [
         {
           "action": "VIEW",
@@ -47,6 +52,11 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
+    "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB8MrjYdb3RrrvjlzHmi-6rPT-M5Dx1DUY"
+        }
+      },
     "plugins": [
       [
         "@react-native-google-signin/google-signin",
