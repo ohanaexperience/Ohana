@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -16,6 +16,11 @@ export default function SignInScreen() {
   const router = useRouter();
 
   const signInWithGoogle = async () => {
+    if (Platform.OS === 'web') {
+      Alert.alert('Not supported', 'Google Sign-In isn’t available on web.');
+      return;
+    }
+
     try {
       await GoogleSignin.hasPlayServices();
       const response = await GoogleSignin.signIn();
@@ -49,10 +54,16 @@ export default function SignInScreen() {
       }
     } catch (err) {
       console.error('Google Sign-In Error:', err);
+      Alert.alert('Sign-In Error', 'An error occurred during Google Sign-In.');
     }
   };
 
   const signInWithFacebook = async () => {
+    if (Platform.OS === 'web') {
+      Alert.alert('Not supported', 'Facebook Login isn’t available on web.');
+      return;
+    }
+
     try {
       const result = await LoginManager.logInWithPermissions(['public_profile']);
       if (result.isCancelled) return;
@@ -61,8 +72,6 @@ export default function SignInScreen() {
       if (!tokenData) throw new Error('Missing token');
       const profile = await Profile.getCurrentProfile();
       if (!profile) throw new Error('Missing profile');
-
-      // You can send tokenData.accessToken to backend here if needed
 
       useAuthStore.getState().setUser({
         provider: 'facebook',
@@ -80,13 +89,14 @@ export default function SignInScreen() {
       router.replace('/(tabs)');
     } catch (err) {
       console.error('Facebook Sign-In Error:', err);
+      Alert.alert('Sign-In Error', 'An error occurred during Facebook Login.');
     }
   };
 
   return (
     <View style={styles.container}>
       {/* Dismiss Button */}
-      <TouchableOpacity style={styles.dismissButton} onPress={() => router.replace('/(tabs)')}>
+      <TouchableOpacity style={styles.dismissButton} onPress={() => router.replace('/(tabs)') }>
         <AntDesign name="close" size={24} color="#000" />
       </TouchableOpacity>
 

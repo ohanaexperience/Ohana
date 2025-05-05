@@ -1,9 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { TouchableOpacity } from 'react-native';
 
 const EVENTS = [
   {
@@ -32,6 +31,21 @@ const EVENTS = [
 export default function ExploreScreen() {
   const router = useRouter();
 
+  // Web fallback: no native map support
+  if (Platform.OS === 'web') {
+    return (
+      <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>  
+        <View style={styles.webFallbackContainer}>
+          <Text style={styles.webFallbackText}>Map is not supported on web</Text>
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/explore/bottom-sheet')}>
+            <Text style={styles.buttonText}>View Events</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // Native map rendering on iOS/Android
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}> 
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
@@ -67,23 +81,35 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
   },
+  webFallbackContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+    backgroundColor: '#fff',
+  },
+  webFallbackText: {
+    fontSize: 18,
+    marginBottom: 24,
+    textAlign: 'center',
+  },
   button: {
-  position: 'absolute',
-  bottom: 100,
-  alignSelf: 'center',
-  backgroundColor: '#fff',
-  paddingHorizontal: 24,
-  paddingVertical: 12,
-  borderRadius: 32,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.15,
-  shadowRadius: 6,
-  elevation: 4,
-},
-buttonText: {
-  color: '#000',
-  fontWeight: '600',
-  fontSize: 16,
-},
+    position: 'absolute',
+    bottom: 100,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 32,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  buttonText: {
+    color: '#000',
+    fontWeight: '600',
+    fontSize: 16,
+  },
 });
