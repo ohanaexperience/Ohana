@@ -1,31 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 
 const EVENTS = [
-  {
-    id: '1',
-    title: 'German Cooking Class',
-    description: 'Learn to make Pad Thai with locals!',
-    latitude: 13.7563,
-    longitude: 100.5018,
-  },
-  {
-    id: '2',
-    title: 'Temple Tour',
-    description: 'Explore historic temples around Bangkok.',
-    latitude: 13.7512,
-    longitude: 100.4925,
-  },
-  {
-    id: '3',
-    title: 'Street Food Crawl',
-    description: 'Discover hidden street food gems.',
-    latitude: 13.7594,
-    longitude: 100.5374,
-  },
+  { id: '1', title: 'German Cooking Class', description: 'Learn to make Pad Thai with locals!', latitude: 13.7563, longitude: 100.5018 },
+  { id: '2', title: 'Temple Tour', description: 'Explore historic temples around Bangkok.', latitude: 13.7512, longitude: 100.4925 },
+  { id: '3', title: 'Street Food Crawl', description: 'Discover hidden street food gems.', latitude: 13.7594, longitude: 100.5374 },
 ];
 
 export default function ExploreScreen() {
@@ -45,20 +26,19 @@ export default function ExploreScreen() {
     );
   }
 
-  // Native map rendering on iOS/Android
+  // Dynamically require react-native-maps on native so web bundler skips it entirely
+  const MapModule = require('react-native-maps');
+  const MapView = MapModule.default;
+  const Marker = MapModule.Marker;
+
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}> 
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
         <MapView
           style={StyleSheet.absoluteFill}
-          initialRegion={{
-            latitude: 13.7563,
-            longitude: 100.5018,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
-          }}
+          initialRegion={{ latitude: 13.7563, longitude: 100.5018, latitudeDelta: 0.05, longitudeDelta: 0.05 }}
         >
-          {EVENTS.map((event) => (
+          {EVENTS.map(event => (
             <Marker
               key={event.id}
               coordinate={{ latitude: event.latitude, longitude: event.longitude }}
@@ -77,22 +57,9 @@ export default function ExploreScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    position: 'relative',
-  },
-  webFallbackContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-    backgroundColor: '#fff',
-  },
-  webFallbackText: {
-    fontSize: 18,
-    marginBottom: 24,
-    textAlign: 'center',
-  },
+  container: { flex: 1, position: 'relative' },
+  webFallbackContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: '#fff' },
+  webFallbackText: { fontSize: 18, marginBottom: 24, textAlign: 'center' },
   button: {
     position: 'absolute',
     bottom: 100,
@@ -107,9 +74,5 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
   },
-  buttonText: {
-    color: '#000',
-    fontWeight: '600',
-    fontSize: 16,
-  },
+  buttonText: { color: '#000', fontWeight: '600', fontSize: 16 },
 });

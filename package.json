@@ -1,6 +1,11 @@
 {
   "name": "ohana",
   "main": "expo-router/entry",
+ "browser": {
+    "react-native-maps": "./web/empty.js",
+    "@react-native-google-signin/google-signin": "./web/empty.js",
+    "react-native-fbsdk-next": "./web/empty.js"
+  },
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
