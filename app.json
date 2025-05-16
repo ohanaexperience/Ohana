@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "ohanaapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ohanaexperiences.expoapp",
@@ -48,6 +48,13 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "merchant.com.yourid",
+          "enableGooglePay": true                    
+        }
+      ],
       [
         "@react-native-google-signin/google-signin",
         {

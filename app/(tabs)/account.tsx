@@ -23,7 +23,6 @@ const profileOptions = [
   { id: '4', icon: 'settings', label: 'Settings', iconPack: 'Ionicons' },
   { id: '5', icon: 'logout', label: 'Log out', iconPack: 'MaterialIcons' },
   { id: '6', icon: 'star-outline', label: 'Upgrade to Host', iconPack: 'MaterialIcons' },
-  { id: '7', icon: 'star', label: 'Upgrade to Business', iconPack: 'MaterialIcons' },
 ];
 
 const renderIcon = (icon: string, iconPack: string) => {
@@ -58,7 +57,7 @@ export default function ProfileScreen() {
     if (label === 'Settings') {
       router.push('/settings');
     } else if (label === 'Upgrade to Host') {
-      router.push('/upgrade-to-host');
+      router.push('../upgrade-to-host/step1');
     } else if (label === 'Log out') {
       signOut();
     }
