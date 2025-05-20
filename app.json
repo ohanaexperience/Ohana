@@ -12,7 +12,6 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ohanaexperiences.expoapp",
-      "useFrameworks": "static",
       "infoPlist": {
         "CFBundleURLTypes": [
           {
