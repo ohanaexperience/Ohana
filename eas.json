@@ -1,12 +1,14 @@
 {
   "cli": {
     "version": ">= 16.0.1",
-    "appVersionSource": "remote"
+    "appVersionSource": "remote",
+    "requireCommit": "true"
   },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      
       "env": {
         "EXPO_DOCTOR_SKIP_DEPENDENCY_VERSION_CHECK": "1"
       }
