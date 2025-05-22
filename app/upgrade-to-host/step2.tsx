@@ -1,5 +1,4 @@
-// app/upgrade-to-host/step2.tsx
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -20,12 +19,14 @@ export default function HostStep2() {
   const userId = user?.id;
   const idToken = user?.tokens.idToken;
 
+  const [alreadyVerified, setAlreadyVerified] = useState(false);
+  const [initError, setInitError] = useState<string | null>(null);
+
   if (!userId || !idToken) {
     throw new Error('Must be signed in to verify identity');
   }
-  console.log("📣 idToken", idToken);
+
   const fetchOptions = async () => {
-    // call your verify endpoint, sending the userId in the body
     const res = await fetch(
       'https://ikfwakanfh.execute-api.us-east-1.amazonaws.com/dev/v1/auth/id/verify',
       {
@@ -34,52 +35,46 @@ export default function HostStep2() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${idToken}`,
         },
-        // body: JSON.stringify({ userId }),
       }
     );
-    
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`Failed to fetch clientSecret: ${errText}`);
+
+    const json = await res.json();
+
+    if (res.status === 200 && json.error === 'VERIFICATION_ALREADY_APPROVED') {
+      setAlreadyVerified(true);
+      return Promise.reject(new Error('VERIFICATION_ALREADY_APPROVED'));
     }
-    
-    const { clientSecret, ephemeralKey } = await res.json();
-    
-    const result= {
-      sessionId: clientSecret.split('_secret')[0],
-      ephemeralKeySecret: ephemeralKey,
+
+    if (!res.ok) {
+      throw new Error(json.message || 'Failed to fetch clientSecret');
+    }
+
+    return {
+      sessionId: json.clientSecret.split('_secret')[0],
+      ephemeralKeySecret: json.ephemeralKey,
       brandLogo: Image.resolveAssetSource(
         require('../../assets/images/react-logo.png')
       ),
     };
-    console.log('result', result);
-    return result
   };
 
   const { status, present, loading } = useStripeIdentity(fetchOptions);
-  console.log('status', status);
-  console.log('loading', loading);
-  console.log('present', present);
 
-  const handleVerify = useCallback( () => {
-    // try {
-    //   const result = await present();
-    //   if (!result) {
-    //     // user dismissed
-    //     return;
-    //   }
-    //   if (result.error) {
-    //     Alert.alert('Verification failed', result.error.message);
-    //   } else if (result.status === 'completed') {
-    //     router.push('/upgrade-to-host/step3');
-    //   }
-    // } catch (err: any) {
-    //   console.error('💥',err);
-    //   Alert.alert('💥', err.message);
-    // }
-    
+  const handleVerify = useCallback(() => {
     present()
-
+      // .then((result) => {
+      //   if (result?.error) {
+      //     Alert.alert('Verification failed', result.error.message);
+      //   } else if (result?.status === 'completed') {
+      //     router.push('/upgrade-to-host/step3');
+      //   }
+      // })
+      // .catch((err) => {
+      //   if (err.message !== 'VERIFICATION_ALREADY_APPROVED') {
+      //     console.error('💥', err);
+      //     Alert.alert('Error', err.message);
+      //   }
+      // });
   }, [present]);
 
   return (
@@ -90,23 +85,32 @@ export default function HostStep2() {
       </View>
 
       <Text style={styles.title}>Verify your identity</Text>
-      <Text style={styles.subtitle}>
-        We’ll ask you to scan a government-issued ID and take a quick selfie.
-      </Text>
 
-      <TouchableOpacity
-        style={[styles.button, loading && styles.buttonDisabled]}
-        onPress={handleVerify}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Start Verification</Text>
-        )}
-      </TouchableOpacity>
+      {alreadyVerified ? (
+        <Text style={styles.subtitle}>
+          You’ve already verified your identity. You may proceed to the next step.
+        </Text>
+      ) : (
+        <Text style={styles.subtitle}>
+          We’ll ask you to scan a government-issued ID and take a quick selfie.
+        </Text>
+      )}
 
-      <Text style={styles.statusText}>Status: {status}</Text>
+      {!alreadyVerified && (
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={handleVerify}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Start Verification</Text>
+          )}
+        </TouchableOpacity>
+      )}
+
+      <Text style={styles.statusText}>Status: {alreadyVerified ? 'Verified' : status}</Text>
     </SafeAreaView>
   );
 }
