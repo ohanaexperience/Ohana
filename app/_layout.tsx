@@ -9,6 +9,8 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { StripeProvider } from '@stripe/stripe-react-native';
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -31,32 +33,37 @@ export default function RootLayout() {
   return (
 
     <GestureHandlerRootView style={{ flex: 1 }}>
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="settings" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-        <Stack.Screen name="upgrade-to-host" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-        <Stack.Screen name="upgrade-to-business" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-        <Stack.Screen name="+not-found" />
-        <Stack.Screen
-          name="explore/bottom-sheet"
-          options={{
-            presentation: 'modal',
-            animation: 'slide_from_bottom',
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="signin"
-          options={{
-            presentation: 'modal', // makes it slide up
-            headerShown: false,    // we'll handle our own close button
-          }}
-        />
-      </Stack>
-      
-      <StatusBar style="auto" />
-    </ThemeProvider>
+      <StripeProvider
+      publishableKey='pk_live_51RKBfLDVprfwF09mwHtTxQ4FuKdJu8WTgZCSiGzpBzFjUYB5b13nCPXtsztLVvNEiCHclOaoRgwbsknwGitLUTSp00cGM1D9Vn'
+      urlScheme='ohanaapp'
+      merchantIdentifier="merchant.com.your.app.id"
+      >
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="settings" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+            <Stack.Screen name="upgrade-to-host" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+            <Stack.Screen name="+not-found" />
+            <Stack.Screen
+              name="explore/bottom-sheet"
+              options={{
+                presentation: 'modal',
+                animation: 'slide_from_bottom',
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="signin"
+              options={{
+                presentation: 'modal', // makes it slide up
+                headerShown: false,    // we'll handle our own close button
+              }}
+              />
+          </Stack>
+          
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </StripeProvider>
     </GestureHandlerRootView>
   );
 }

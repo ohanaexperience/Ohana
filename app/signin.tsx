@@ -1,3 +1,4 @@
+// app/signin.tsx
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -7,13 +8,16 @@ import { AccessToken, LoginManager, Profile } from 'react-native-fbsdk-next';
 import { useAuthStore } from './store/auth';
 
 GoogleSignin.configure({
-  webClientId: '1066232646154-6l2ujgt1vj65onuku5for4ec8pi5no6u.apps.googleusercontent.com',
-  iosClientId: '1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1.apps.googleusercontent.com',
+  webClientId:
+    '1066232646154-6l2ujgt1vj65onuku5for4ec8pi5no6u.apps.googleusercontent.com',
+  iosClientId:
+    '1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1.apps.googleusercontent.com',
   offlineAccess: true,
 });
 
 export default function SignInScreen() {
   const router = useRouter();
+  const setUser = useAuthStore((s) => s.setUser);
 
   const signInWithGoogle = async () => {
     try {
@@ -21,30 +25,41 @@ export default function SignInScreen() {
       const response = await GoogleSignin.signIn();
 
       if (response.type === 'success') {
-        const { idToken, user } = response.data;
+        const { idToken: googleIdToken, user } = response.data;
         const backendResponse = await fetch(
           'https://ikfwakanfh.execute-api.us-east-1.amazonaws.com/dev/v1/auth/google/sign-in',
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ idToken }),
+            body: JSON.stringify({ idToken: googleIdToken }),
           }
         );
-        if (!backendResponse.ok) throw new Error('Backend verification failed');
+        if (!backendResponse.ok)
+          throw new Error('Backend verification failed');
 
-        const data = await backendResponse.json();
-        useAuthStore.getState().setUser({
+        const {
+          AccessToken,
+          ExpiresIn,
+          IdToken,
+          RefreshToken,
+          TokenType,
+        } = await backendResponse.json();
+
+        setUser({
           provider: 'google',
           id: user.id,
           email: user.email,
           name: user.name ?? '',
           photo: user.photo,
           tokens: {
-            idToken: data.IdToken,
-            accessToken: data.AccessToken,
-            refreshToken: data.RefreshToken,
+            idToken: IdToken,
+            accessToken: AccessToken,
+            refreshToken: RefreshToken,
+            expiresIn: ExpiresIn,
+            tokenType: TokenType,
           },
         });
+
         router.replace('/(tabs)');
       }
     } catch (err) {
@@ -54,15 +69,15 @@ export default function SignInScreen() {
 
   const signInWithFacebook = async () => {
     try {
-      const result = await LoginManager.logInWithPermissions(['public_profile']);
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+      ]);
       if (result.isCancelled) return;
 
       const tokenData = await AccessToken.getCurrentAccessToken();
       if (!tokenData) throw new Error('Missing token');
       const profile = await Profile.getCurrentProfile();
       if (!profile) throw new Error('Missing profile');
-
-      // You can send tokenData.accessToken to backend here if needed
 
       useAuthStore.getState().setUser({
         provider: 'facebook',
@@ -74,6 +89,8 @@ export default function SignInScreen() {
           idToken: tokenData.accessToken,
           accessToken: tokenData.accessToken,
           refreshToken: '',
+          expiresIn: 0,
+          tokenType: '',
         },
       });
 
@@ -85,8 +102,10 @@ export default function SignInScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Dismiss Button */}
-      <TouchableOpacity style={styles.dismissButton} onPress={() => router.replace('/(tabs)')}>
+      <TouchableOpacity
+        style={styles.dismissButton}
+        onPress={() => router.replace('/(tabs)')}
+      >
         <AntDesign name="close" size={24} color="#000" />
       </TouchableOpacity>
 
@@ -98,7 +117,12 @@ export default function SignInScreen() {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={signInWithFacebook}>
-        <AntDesign name="facebook-square" size={20} color="#000" style={styles.icon} />
+        <AntDesign
+          name="facebook-square"
+          size={20}
+          color="#000"
+          style={styles.icon}
+        />
         <Text style={styles.buttonText}>Continue with Facebook</Text>
       </TouchableOpacity>
     </View>
@@ -106,7 +130,13 @@ export default function SignInScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', padding: 24 },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 24,
+  },
   title: { fontSize: 28, fontWeight: 'bold', marginBottom: 40 },
   button: {
     flexDirection: 'row',
@@ -121,14 +151,8 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 300,
   },
-  icon: {
-    marginRight: 12,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
-  },
+  icon: { marginRight: 12 },
+  buttonText: { fontSize: 16, fontWeight: '600', color: '#000' },
   dismissButton: {
     position: 'absolute',
     top: 60,

@@ -1,3 +1,4 @@
+// app/store/auth.tsx
 import { create } from 'zustand';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LoginManager } from 'react-native-fbsdk-next';
@@ -7,6 +8,8 @@ type AuthTokens = {
   idToken: string;
   accessToken: string;
   refreshToken: string;
+  expiresIn: number;
+  tokenType: string;
 };
 
 type AuthUser = {
@@ -37,7 +40,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       } else if (user?.provider === 'facebook') {
         await LoginManager.logOut();
       }
-
       set({ user: null });
       router.replace('/signin');
     } catch (err) {
