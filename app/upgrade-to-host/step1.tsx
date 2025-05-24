@@ -5,15 +5,50 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { useNavigation } from 'expo-router';
+import { useLayoutEffect } from 'react';
+
+
 
 export default function HostStep1() {
   const router = useRouter();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Become a Host',
+      headerTitleAlign: 'center',
+    });
+  }, [navigation]);
+
+  const validateEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleContinue = () => {
+    if (!fullName.trim()) {
+      Alert.alert('Invalid Full Name', 'Full name must be at least 1 character.');
+      return;
+    }
+    if (!validateEmail(email)) {
+      Alert.alert('Invalid Email', 'Please enter a valid email address.');
+      return;
+    }
+
+    router.push({
+      pathname: './step2',
+      params: { fullName, email, phone },
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,15 +84,7 @@ export default function HostStep1() {
         onChangeText={setPhone}
       />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() =>
-          router.push({
-            pathname: './step2',
-            params: { fullName, email, phone },
-          })
-        }
-      >
+      <TouchableOpacity style={styles.button} onPress={handleContinue}>
         <Text style={styles.buttonText}>Continue to Step 2</Text>
       </TouchableOpacity>
     </SafeAreaView>

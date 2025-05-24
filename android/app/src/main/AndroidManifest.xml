@@ -33,7 +33,6 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="ohanaapp"/>
-        <data android:scheme="com.ohanaexperiences.expoapp"/>
         <data android:scheme="exp+ohanaapp"/>
       </intent-filter>
       <intent-filter data-generated="true">
