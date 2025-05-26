@@ -55,7 +55,8 @@ export default function HostStep4() {
       );
 
       const { uploadUrl } = await res.json();
-
+      console.log('Upload URL:', uploadUrl);
+      
       const uploadRes = await fetch(uploadUrl, {
         method: 'PUT',
         headers: {
