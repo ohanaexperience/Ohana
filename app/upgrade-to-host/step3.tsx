@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  TouchableWithoutFeedback,
+  Keyboard
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useNavigation } from 'expo-router';
@@ -41,11 +43,20 @@ export default function HostStep4() {
 
       if (result.canceled) return;
 
-      const uri = result.assets[0].uri;
-      const fileType = uri.split('.').pop();
-
-      const res = await fetch(
-        'https://ikfwakanfh.execute-api.us-east-1.amazonaws.com/dev/v1/user/profile/image/upload-url',
+      const asset = result.assets[0];
+      console.log('Selected asset:', asset);
+      const uri = asset.uri;
+      const fileExt = uri.split('.').pop()?.toLowerCase();
+      const mimeType =
+        fileExt === 'png'
+          ? 'image/png'
+          : fileExt === 'webp'
+          ? 'image/webp'
+          : 'image/jpeg'; // default to jpeg
+      console.log('File extension:', fileExt, 'MIME type:', mimeType);
+      // Get signed upload URL
+      const response = await fetch(
+        `https://ikfwakanfh.execute-api.us-east-1.amazonaws.com/dev/v1/user/profile/image/upload-url?mimeType=${mimeType}`,
         {
           method: 'GET',
           headers: {
@@ -54,28 +65,25 @@ export default function HostStep4() {
         }
       );
 
-      const { uploadUrl } = await res.json();
-      console.log('Upload URL:', uploadUrl);
-      
-      const uploadRes = await fetch(uploadUrl, {
+      const { uploadUrl } = await response.json();
+
+      const imageBlob = await (await fetch(uri)).blob();
+      const uploadResponse = await fetch(uploadUrl, {
         method: 'PUT',
-        headers: {
-          'Content-Type': `image/${fileType}`,
-        },
-        body: await (await fetch(uri)).blob(),
+        headers: { 'Content-Type': mimeType },
+        body: imageBlob,
       });
 
-      if (!uploadRes.ok) {
-        throw new Error('Upload failed');
-      }
+      if (!uploadResponse.ok) throw new Error('Upload failed');
 
       setProfileImageUri(uri);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Upload error:', err);
     }
   };
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <SafeAreaView style={styles.container}>
       <Text style={styles.stepText}>Step 4 of 4</Text>
       <View style={styles.progressBar}>
@@ -102,6 +110,7 @@ export default function HostStep4() {
         numberOfLines={4}
         value={aboutMe}
         onChangeText={setAboutMe}
+        placeholderTextColor="#D3D3D3"
       />
 
       {/* <Text style={styles.label}>Connect Social Media</Text>
@@ -121,6 +130,7 @@ export default function HostStep4() {
 
       <Text style={styles.secondaryText}>I'll Set Up My Experience Later</Text>
     </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
