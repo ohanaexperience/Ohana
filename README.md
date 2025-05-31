@@ -1,7 +1,8 @@
-# Welcome to whatever this is 👋
+# Welcome to the long and complicated journey that has become Ohana 👋
 
+Android Oauth Client is managed in Firebase (firebase needed to generate google-services.json)
+iOS Oauth Client in Google Cloud Console
 
+EAS uses the Ohana gmail account
+Firebase uses _@ohana.world account (and is linked to Google Cloud Console)
 
-## Get started
-
-1. Due to problems with Stripe, there are 2 versions.  iOS uses expo52 and Android uses expo53.  Do not change this.  It was a nightmare.

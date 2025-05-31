@@ -6,12 +6,23 @@ import { AntDesign } from '@expo/vector-icons';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { AccessToken, LoginManager, Profile } from 'react-native-fbsdk-next';
 import { useAuthStore } from './store/auth';
+import Constants from 'expo-constants';
+
+const config = Constants.expoConfig?.extra ?? {};
+
+export const GOOGLE_IOS_CLIENT_ID = config.GOOGLE_IOS_CLIENT_ID;
+export const GOOGLE_ANDROID_CLIENT_ID = config.GOOGLE_ANDROID_CLIENT_ID;
+export const GOOGLE_MAPS_API_KEY = config.GOOGLE_MAPS_API_KEY;
+export const GOOGLE_WEB_CLIENT_ID = config.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
+
+console.log('GOOGLE_IOS_CLIENT_ID:', GOOGLE_IOS_CLIENT_ID);
+console.log('GOOGLE_ANDROID_CLIENT_ID:', GOOGLE_ANDROID_CLIENT_ID);
+console.log('GOOGLE_WEB_CLIENT_ID:', GOOGLE_WEB_CLIENT_ID);
+console.log('📣',process.env);
 
 GoogleSignin.configure({
-  webClientId:
-    '1066232646154-6l2ujgt1vj65onuku5for4ec8pi5no6u.apps.googleusercontent.com',
-  iosClientId:
-    '1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1.apps.googleusercontent.com',
+  webClientId: GOOGLE_WEB_CLIENT_ID,
+  iosClientId:GOOGLE_IOS_CLIENT_ID,
   offlineAccess: true,
 });
 

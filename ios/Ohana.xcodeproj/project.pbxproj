@@ -8,27 +8,29 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		1EB8DCA8933F455189C7BBA2 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A92F4811BB4F3AAF9B33BF /* noop-file.swift */; };
+		17D18FE6468F0E155BCA93BE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CE3B1B451415052EDC9BA868 /* PrivacyInfo.xcprivacy */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		840CA1FB5C0E9EFEF3DEA5B9 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED05CD02620814ADBC96C6F /* ExpoModulesProvider.swift */; };
+		530880367636423B324C5BFF /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D869E49AF0143168889E7 /* ExpoModulesProvider.swift */; };
+		8112FC59CE4343B8B78A4A0B /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B176304676B4FEE92033871 /* noop-file.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		D69B669A4D7E8C62EA014F3D /* libPods-Ohana.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E141EF16AF96CE0AA444EAB4 /* libPods-Ohana.a */; };
-		DD16583CF6C6D72C6A85D225 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 36A811A7D367331E47EF969B /* PrivacyInfo.xcprivacy */; };
+		E0E537A741AA45A1A1A868F3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78F32B74BAED4DA2B6D79B71 /* GoogleService-Info.plist */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
+		FDE33BEA42CA66B8D11917B2 /* libPods-Ohana.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9820F0A215C3391A0FF17DFD /* libPods-Ohana.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* Ohana.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ohana.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Ohana/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Ohana/Info.plist; sourceTree = "<group>"; };
-		36A811A7D367331E47EF969B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Ohana/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		3ED05CD02620814ADBC96C6F /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Ohana/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		54143225BB7143E31C3FDE5A /* Pods-Ohana.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ohana.release.xcconfig"; path = "Target Support Files/Pods-Ohana/Pods-Ohana.release.xcconfig"; sourceTree = "<group>"; };
+		2A9D869E49AF0143168889E7 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Ohana/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		3B176304676B4FEE92033871 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "Ohana/noop-file.swift"; sourceTree = "<group>"; };
+		5108A447B01EA4EC572C7DD7 /* Pods-Ohana.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ohana.release.xcconfig"; path = "Target Support Files/Pods-Ohana/Pods-Ohana.release.xcconfig"; sourceTree = "<group>"; };
+		54DEA832D51C52D915D33607 /* Pods-Ohana.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ohana.debug.xcconfig"; path = "Target Support Files/Pods-Ohana/Pods-Ohana.debug.xcconfig"; sourceTree = "<group>"; };
+		78F32B74BAED4DA2B6D79B71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Ohana/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9820F0A215C3391A0FF17DFD /* libPods-Ohana.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Ohana.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Ohana/SplashScreen.storyboard; sourceTree = "<group>"; };
-		B2A92F4811BB4F3AAF9B33BF /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "Ohana/noop-file.swift"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		C32CCBE342A4A5EEF150CF36 /* Pods-Ohana.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ohana.debug.xcconfig"; path = "Target Support Files/Pods-Ohana/Pods-Ohana.debug.xcconfig"; sourceTree = "<group>"; };
-		E141EF16AF96CE0AA444EAB4 /* libPods-Ohana.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Ohana.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE3B1B451415052EDC9BA868 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Ohana/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Ohana/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* Ohana-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Ohana-Bridging-Header.h"; path = "Ohana/Ohana-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -39,7 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D69B669A4D7E8C62EA014F3D /* libPods-Ohana.a in Frameworks */,
+				FDE33BEA42CA66B8D11917B2 /* libPods-Ohana.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,35 +57,34 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				B2A92F4811BB4F3AAF9B33BF /* noop-file.swift */,
-				36A811A7D367331E47EF969B /* PrivacyInfo.xcprivacy */,
+				78F32B74BAED4DA2B6D79B71 /* GoogleService-Info.plist */,
+				3B176304676B4FEE92033871 /* noop-file.swift */,
+				CE3B1B451415052EDC9BA868 /* PrivacyInfo.xcprivacy */,
 			);
 			name = Ohana;
-			sourceTree = "<group>";
-		};
-		1D7203E671965640DC031B03 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				C32CCBE342A4A5EEF150CF36 /* Pods-Ohana.debug.xcconfig */,
-				54143225BB7143E31C3FDE5A /* Pods-Ohana.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				E141EF16AF96CE0AA444EAB4 /* libPods-Ohana.a */,
+				9820F0A215C3391A0FF17DFD /* libPods-Ohana.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		7EE3A21A2D727339FE3F2BF4 /* Ohana */ = {
+		5D9B8E7C0B759378FF81FE03 /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				3ED05CD02620814ADBC96C6F /* ExpoModulesProvider.swift */,
+				7476A71BD5DA963D32C37685 /* Ohana */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
+		7476A71BD5DA963D32C37685 /* Ohana */ = {
+			isa = PBXGroup;
+			children = (
+				2A9D869E49AF0143168889E7 /* ExpoModulesProvider.swift */,
 			);
 			name = Ohana;
 			sourceTree = "<group>";
@@ -102,8 +103,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				1D7203E671965640DC031B03 /* Pods */,
-				B83BDFE0A38A607374CF6433 /* ExpoModulesProviders */,
+				CEDFFE772581B99023B2D069 /* Pods */,
+				5D9B8E7C0B759378FF81FE03 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -118,14 +119,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B83BDFE0A38A607374CF6433 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				7EE3A21A2D727339FE3F2BF4 /* Ohana */,
-			);
-			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -133,6 +126,16 @@
 			);
 			name = Supporting;
 			path = Ohana/Supporting;
+			sourceTree = "<group>";
+		};
+		CEDFFE772581B99023B2D069 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				54DEA832D51C52D915D33607 /* Pods-Ohana.debug.xcconfig */,
+				5108A447B01EA4EC572C7DD7 /* Pods-Ohana.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,13 +146,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Ohana" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				C5F831477ABB09EB0CF36FB4 /* [Expo] Configure project */,
+				AFDA30EAFE399E3773D93984 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				0D8EFAF931C8FF5AE030AD0F /* [CP] Embed Pods Frameworks */,
+				FCF4968A3C904B0368818A95 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -199,7 +202,8 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				DD16583CF6C6D72C6A85D225 /* PrivacyInfo.xcprivacy in Resources */,
+				E0E537A741AA45A1A1A868F3 /* GoogleService-Info.plist in Resources */,
+				17D18FE6468F0E155BCA93BE /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,36 +245,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		0D8EFAF931C8FF5AE030AD0F /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Ohana/Pods-Ohana-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBAEMKit/FBAEMKit.framework/FBAEMKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework/FBSDKCoreKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.framework/FBSDKCoreKit_Basics",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKGamingServicesKit/FBSDKGamingServicesKit.framework/FBSDKGamingServicesKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework/FBSDKLoginKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKShareKit/FBSDKShareKit.framework/FBSDKShareKit",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBAEMKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit_Basics.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKGamingServicesKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKShareKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Ohana/Pods-Ohana-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
@@ -343,7 +317,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Ohana/Pods-Ohana-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C5F831477ABB09EB0CF36FB4 /* [Expo] Configure project */ = {
+		AFDA30EAFE399E3773D93984 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -362,6 +336,36 @@
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-Ohana/expo-configure-project.sh\"\n";
 		};
+		FCF4968A3C904B0368818A95 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Ohana/Pods-Ohana-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBAEMKit/FBAEMKit.framework/FBAEMKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework/FBSDKCoreKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.framework/FBSDKCoreKit_Basics",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKGamingServicesKit/FBSDKGamingServicesKit.framework/FBSDKGamingServicesKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework/FBSDKLoginKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKShareKit/FBSDKShareKit.framework/FBSDKShareKit",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBAEMKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit_Basics.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKGamingServicesKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKShareKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Ohana/Pods-Ohana-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -370,8 +374,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				1EB8DCA8933F455189C7BBA2 /* noop-file.swift in Sources */,
-				840CA1FB5C0E9EFEF3DEA5B9 /* ExpoModulesProvider.swift in Sources */,
+				8112FC59CE4343B8B78A4A0B /* noop-file.swift in Sources */,
+				530880367636423B324C5BFF /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -380,7 +384,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C32CCBE342A4A5EEF150CF36 /* Pods-Ohana.debug.xcconfig */;
+			baseConfigurationReference = 54DEA832D51C52D915D33607 /* Pods-Ohana.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -405,7 +409,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ohanaexperiences.expoapp;
-				PRODUCT_NAME = "Ohana";
+				PRODUCT_NAME = Ohana;
 				SWIFT_OBJC_BRIDGING_HEADER = "Ohana/Ohana-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -416,7 +420,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 54143225BB7143E31C3FDE5A /* Pods-Ohana.release.xcconfig */;
+			baseConfigurationReference = 5108A447B01EA4EC572C7DD7 /* Pods-Ohana.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -436,7 +440,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ohanaexperiences.expoapp;
-				PRODUCT_NAME = "Ohana";
+				PRODUCT_NAME = Ohana;
 				SWIFT_OBJC_BRIDGING_HEADER = "Ohana/Ohana-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

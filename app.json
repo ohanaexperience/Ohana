@@ -11,11 +11,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ohanaexperiences.expoapp",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1",
+              "com.googleusercontent.apps.1036045272087-mkhsjv6blc7ksr0p6f6vks24ebvcpeoc",
               "fb8762220613880930"
             ]
           }
@@ -61,7 +62,7 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.googleusercontent.apps.1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1"
+          "iosUrlScheme": "com.googleusercontent.apps.1036045272087-mkhsjv6blc7ksr0p6f6vks24ebvcpeoc"
         }
       ],
       [
@@ -97,7 +98,11 @@
       },
       "eas": {
         "projectId": "f30962b9-4591-4f81-84a8-8d16193c94e0"
-      }
+      },
+      "GOOGLE_IOS_CLIENT_ID": "${GOOGLE_IOS_CLIENT_ID}",
+      "GOOGLE_ANDROID_CLIENT_ID": "${GOOGLE_ANDROID_CLIENT_ID}",
+      "GOOGLE_MAPS_API_KEY": "${GOOGLE_MAPS_API_KEY}",
+      "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "${EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID}"
     },
     "owner": "ohanaorg"
   }

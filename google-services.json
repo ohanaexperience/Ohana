@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1036045272087",
+    "project_id": "crypto-arcade-458817-h6",
+    "storage_bucket": "crypto-arcade-458817-h6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036045272087:android:655e2210ba4858624d8852",
+        "android_client_info": {
+          "package_name": "com.ohanaexperiences.expoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1036045272087-qmv6nfknnhr9e7qld1ova3gu2ofobb04.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZGZbeXvvyIRJ1oLzkiAlkPGO_vrdJbb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1036045272087-qmv6nfknnhr9e7qld1ova3gu2ofobb04.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1036045272087-mkhsjv6blc7ksr0p6f6vks24ebvcpeoc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ohanaexperiences.expoapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
