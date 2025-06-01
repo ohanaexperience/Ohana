@@ -10,7 +10,8 @@
       
       "env": {
         "EXPO_DOCTOR_SKIP_DEPENDENCY_VERSION_CHECK": "1",
-        "APP_VARIANT": "development"
+        "APP_VARIANT": "development",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "1036045272087-cv2oucjvo30m0g3llpdbrau9qfg70lhj.apps.googleusercontent.com"
       },
       "environment": "development"
     },

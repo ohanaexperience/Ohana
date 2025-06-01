@@ -15,8 +15,9 @@
       "infoPlist": {
         "CFBundleURLTypes": [
           {
+            "CFBundleTypeRole": "Editor",
             "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.1036045272087-mkhsjv6blc7ksr0p6f6vks24ebvcpeoc",
+              "com.googleusercontent.apps.1036045272087-e1l55rh7afnnj8lnsb4bkumue8kd3p2a",
               "fb8762220613880930"
             ]
           }
@@ -27,6 +28,7 @@
     },
     "android": {
       "package": "com.ohanaexperiences.expoapp",
+      "googleServicesFile": "./google-services.json",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -62,7 +64,7 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.googleusercontent.apps.1036045272087-mkhsjv6blc7ksr0p6f6vks24ebvcpeoc"
+          "iosUrlScheme": "com.googleusercontent.apps.1036045272087-e1l55rh7afnnj8lnsb4bkumue8kd3p2a"
         }
       ],
       [
@@ -99,8 +101,6 @@
       "eas": {
         "projectId": "f30962b9-4591-4f81-84a8-8d16193c94e0"
       },
-      "GOOGLE_IOS_CLIENT_ID": "${GOOGLE_IOS_CLIENT_ID}",
-      "GOOGLE_ANDROID_CLIENT_ID": "${GOOGLE_ANDROID_CLIENT_ID}",
       "GOOGLE_MAPS_API_KEY": "${GOOGLE_MAPS_API_KEY}",
       "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "${EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID}"
     },

@@ -8,23 +8,21 @@ import { AccessToken, LoginManager, Profile } from 'react-native-fbsdk-next';
 import { useAuthStore } from './store/auth';
 import Constants from 'expo-constants';
 
-const config = Constants.expoConfig?.extra ?? {};
+export const GOOGLE_MAPS_API_KEY = Constants.expoConfig?.extra?.GOOGLE_MAPS_API_KEY;
+export const GOOGLE_WEB_CLIENT_ID = Constants.expoConfig?.extra?.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
 
-export const GOOGLE_IOS_CLIENT_ID = config.GOOGLE_IOS_CLIENT_ID;
-export const GOOGLE_ANDROID_CLIENT_ID = config.GOOGLE_ANDROID_CLIENT_ID;
-export const GOOGLE_MAPS_API_KEY = config.GOOGLE_MAPS_API_KEY;
-export const GOOGLE_WEB_CLIENT_ID = config.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
-
-console.log('GOOGLE_IOS_CLIENT_ID:', GOOGLE_IOS_CLIENT_ID);
-console.log('GOOGLE_ANDROID_CLIENT_ID:', GOOGLE_ANDROID_CLIENT_ID);
 console.log('GOOGLE_WEB_CLIENT_ID:', GOOGLE_WEB_CLIENT_ID);
 console.log('📣',process.env);
 
 GoogleSignin.configure({
   webClientId: GOOGLE_WEB_CLIENT_ID,
-  iosClientId:GOOGLE_IOS_CLIENT_ID,
   offlineAccess: true,
 });
+
+// const playServicesAvailable = await GoogleSignin.hasPlayServices();
+// const currentUser = await GoogleSignin.signInSilently().catch(() => null);
+// console.log("Google Play Services Available:", playServicesAvailable);
+// console.log("Current signed in user:", currentUser);
 
 export default function SignInScreen() {
   const router = useRouter();

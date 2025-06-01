@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "1036045272087-qmv6nfknnhr9e7qld1ova3gu2ofobb04.apps.googleusercontent.com",
+          "client_id": "1036045272087-72bisr530au5ejkde3l29if10s70gf1e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ohanaexperiences.expoapp",
+            "certificate_hash": "bd47bd0797cd77bf5622b34e535230375d7d09a1"
+          }
+        },
+        {
+          "client_id": "1036045272087-cv2oucjvo30m0g3llpdbrau9qfg70lhj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,11 +35,11 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1036045272087-qmv6nfknnhr9e7qld1ova3gu2ofobb04.apps.googleusercontent.com",
+              "client_id": "1036045272087-cv2oucjvo30m0g3llpdbrau9qfg70lhj.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "1036045272087-mkhsjv6blc7ksr0p6f6vks24ebvcpeoc.apps.googleusercontent.com",
+              "client_id": "1036045272087-e1l55rh7afnnj8lnsb4bkumue8kd3p2a.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.ohanaexperiences.expoapp"
