@@ -7,21 +7,21 @@
     "icon": "./assets/images/icon.png",
     "scheme": "ohanaapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ohanaexperiences.expoapp",
       "infoPlist": {
         "CFBundleURLTypes": [
           {
+            "CFBundleTypeRole": "Editor",
             "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1",
+              "com.googleusercontent.apps.1036045272087-rj7bfqar6lhv4u0jc4vg8ni0uoa8i606",
               "fb8762220613880930"
             ]
           }
         ],
-        "NSCameraUsageDescription": "This app needs access to your camera to allow you to upload a profile photo.",
-        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to upload a profile photo."
+        "NSCameraUsageDescription": "We use your camera so you can upload a profile photo.",
+        "NSPhotoLibraryUsageDescription": "We use your photo library to let you upload profile photos."
       }
     },
     "android": {
@@ -47,10 +47,20 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static",
+            "podfileProperties": {
+              "use_modular_headers!": true
+            }
+          }
+        }
+      ],
       [
         "@stripe/stripe-react-native",
         {
@@ -61,7 +71,7 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.googleusercontent.apps.1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1"
+          "iosUrlScheme": "com.googleusercontent.apps.1036045272087-rj7bfqar6lhv4u0jc4vg8ni0uoa8i606"
         }
       ],
       [
@@ -74,7 +84,7 @@
           "advertiserIDCollectionEnabled": false,
           "autoLogAppEventsEnabled": false,
           "isAutoInitEnabled": true,
-          "iosUserTrackingPermission": "This identifier will be used to deliver personalized ads to you."
+          "iosUserTrackingPermission": "Used to deliver personalized ads."
         }
       ],
       "expo-router",
@@ -86,18 +96,19 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
-      "router": {
-        "origin": false
-      },
       "eas": {
         "projectId": "f30962b9-4591-4f81-84a8-8d16193c94e0"
-      }
+      },
+      "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "1036045272087-m020u7sbmf6p4r08cikj61ufs2u6sl58.apps.googleusercontent.com",
+      "GOOGLE_IOS_CLIENT_ID": "1036045272087-rj7bfqar6lhv4u0jc4vg8ni0uoa8i606.apps.googleusercontent.com",
+      "GOOGLE_MAPS_API_KEY": "${GOOGLE_MAPS_API_KEY}"
     },
     "owner": "ohanaorg"
   }
