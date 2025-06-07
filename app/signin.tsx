@@ -30,6 +30,7 @@ GoogleSignin.configure({
 export default function SignInScreen() {
   const router = useRouter();
   const setUser = useAuthStore((s) => s.setUser);
+  const setIsHost = useAuthStore((s) => s.setIsHost);
 
   const signInWithGoogle = async () => {
     try {
@@ -73,6 +74,15 @@ export default function SignInScreen() {
           },
         });
 
+        const hostRes = await fetch(
+        'https://ikfwakanfh.execute-api.us-east-1.amazonaws.com/dev/v1/host/profile',
+        {
+          headers: { Authorization: `Bearer ${IdToken}` },
+        }
+      );
+      const hostJson = await hostRes.json();
+      console.log('Host profile 🙋‍♂️:', hostJson);
+      setIsHost(hostJson.isActive === true);
         router.replace('/(tabs)');
       }
     } catch (err) {

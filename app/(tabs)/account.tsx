@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -15,15 +15,6 @@ import {
 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useAuthStore, useIsLoggedIn } from '../store/auth';
-
-const profileOptions = [
-  { id: '1', icon: 'credit-card', label: 'Payment', iconPack: 'MaterialIcons' },
-  { id: '2', icon: 'location-outline', label: 'Trips', iconPack: 'Ionicons' },
-  { id: '3', icon: 'help-circle-outline', label: 'Help', iconPack: 'Ionicons' },
-  { id: '4', icon: 'settings', label: 'Settings', iconPack: 'Ionicons' },
-  { id: '5', icon: 'logout', label: 'Log out', iconPack: 'MaterialIcons' },
-  { id: '6', icon: 'star-outline', label: 'Upgrade to Host', iconPack: 'MaterialIcons' },
-];
 
 const renderIcon = (icon: string, iconPack: string) => {
   const size = 24;
@@ -44,12 +35,33 @@ export default function ProfileScreen() {
   const signOut = useAuthStore((s) => s.signOut);
   const user = useAuthStore((s) => s.user);
   const isLoggedIn = useIsLoggedIn();
+  const isHost = useAuthStore((s) => s.isHost);
 
   useEffect(() => {
     if (!isLoggedIn) {
       router.push('/signin');
     }
   }, [isLoggedIn]);
+
+  const profileOptions = useMemo(() => {
+    const baseOptions = [
+      { id: '1', icon: 'credit-card', label: 'Payment', iconPack: 'MaterialIcons' },
+      { id: '2', icon: 'location-outline', label: 'Trips', iconPack: 'Ionicons' },
+      { id: '3', icon: 'help-circle-outline', label: 'Help', iconPack: 'Ionicons' },
+      { id: '4', icon: 'settings', label: 'Settings', iconPack: 'Ionicons' },
+      { id: '5', icon: 'logout', label: 'Log out', iconPack: 'MaterialIcons' },
+      { id: '6', icon: 'star-outline', label: 'Upgrade to Host', iconPack: 'MaterialIcons' },
+    ];
+    if (isHost) {
+      baseOptions.unshift({
+        id: '0',
+        icon: 'plus-circle-outline',
+        label: 'Create an Experience',
+        iconPack: 'Ionicons',
+      });
+    }
+    return baseOptions;
+  }, [isHost]);
 
   if (!user) return null;
 
@@ -58,6 +70,8 @@ export default function ProfileScreen() {
       router.push('/settings');
     } else if (label === 'Upgrade to Host') {
       router.push('../upgrade-to-host/step1');
+    } else if (label === 'Create an Experience') {
+      router.push('/create-experience/step1');
     } else if (label === 'Log out') {
       signOut();
     }
