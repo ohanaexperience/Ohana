@@ -54,6 +54,8 @@
     <string>934e68962fa8a9e616117867e2c84b6e</string>
     <key>FacebookDisplayName</key>
     <string>Ohana</string>
+    <key>GMSApiKey</key>
+    <string>AIzaSyBDTHeWbGAnUpVAjyWereu_Hxoczcwan4w</string>
     <key>LSApplicationQueriesSchemes</key>
     <array>
       <string>fbapi</string>
@@ -75,11 +77,11 @@
     <key>NSCameraUsageDescription</key>
     <string>We use your camera so you can upload a profile photo.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your location</string>
+    <string>Allow Ohana to access your location at all times.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your location</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your location</string>
+    <string>Allow Ohana to access your location while using the app.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
     <key>NSPhotoLibraryUsageDescription</key>

@@ -17,6 +17,10 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { useAuthStore } from '../store/auth';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+import {
+  BACKEND_URL,
+} from '../env';
+
 export default function CreateExperienceStep1() {
   const router = useRouter();
   const navigation = useNavigation();
@@ -55,7 +59,7 @@ export default function CreateExperienceStep1() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch('https://ikfwakanfh.execute-api.us-east-1.amazonaws.com/dev/v1/host/categories', {
+        const res = await fetch(BACKEND_URL+'/v1/host/categories', {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

@@ -92,6 +92,15 @@
           "iosUserTrackingPermission": "Used to deliver personalized ads."
         }
       ],
+      [
+      "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Ohana to access your location at all times.",
+          "locationWhenInUsePermission": "Allow Ohana to access your location while using the app.",
+          "isIosBackgroundLocationEnabled": false,
+          "isAndroidBackgroundLocationEnabled": false
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
@@ -110,10 +119,7 @@
     "extra": {
       "eas": {
         "projectId": "f30962b9-4591-4f81-84a8-8d16193c94e0"
-      },
-      "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "1036045272087-m020u7sbmf6p4r08cikj61ufs2u6sl58.apps.googleusercontent.com",
-      "GOOGLE_IOS_CLIENT_ID": "1036045272087-rj7bfqar6lhv4u0jc4vg8ni0uoa8i606.apps.googleusercontent.com",
-      "GOOGLE_MAPS_API_KEY": "${GOOGLE_MAPS_API_KEY}"
+      }
     },
     "owner": "ohanaorg"
   }

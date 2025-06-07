@@ -14,6 +14,9 @@ import { useRouter, useNavigation } from 'expo-router';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuthStore } from '../store/auth';
+import {
+  BACKEND_URL,
+} from '../env';
 
 export default function HostStep4() {
   const router = useRouter();
@@ -56,7 +59,7 @@ export default function HostStep4() {
       console.log('File extension:', fileExt, 'MIME type:', mimeType);
       // Get signed upload URL
       const response = await fetch(
-        `https://ikfwakanfh.execute-api.us-east-1.amazonaws.com/dev/v1/user/profile/image/upload-url?mimeType=${mimeType}`,
+        `${BACKEND_URL}/v1/user/profile/image/upload-url?mimeType=${mimeType}`,
         {
           method: 'GET',
           headers: {
