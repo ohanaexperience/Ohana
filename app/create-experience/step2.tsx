@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
-import { useRouter } from 'expo-router';
+import { useRouter, Stack } from 'expo-router';
 
 export default function CreateExperienceStep2() {
   const router = useRouter();
@@ -58,9 +58,40 @@ export default function CreateExperienceStep2() {
     router.push('./step3');
   };
 
+  const updateStartingLocationFromAddress = async (address) => {
+    setStartingAddress(address);
+    try {
+      const geocode = await Location.geocodeAsync(address);
+      if (geocode.length > 0) {
+        setStartingLocation({
+          latitude: geocode[0].latitude,
+          longitude: geocode[0].longitude,
+        });
+      }
+    } catch (e) {
+      console.warn('Geocode failed', e);
+    }
+  };
+
+  const updateEndingLocationFromAddress = async (address) => {
+    setEndingAddress(address);
+    try {
+      const geocode = await Location.geocodeAsync(address);
+      if (geocode.length > 0) {
+        setEndingLocation({
+          latitude: geocode[0].latitude,
+          longitude: geocode[0].longitude,
+        });
+      }
+    } catch (e) {
+      console.warn('Geocode failed', e);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={styles.container} edges={['top']}>        
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <Stack.Screen options={{ title: 'Create Experience' }} />
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.stepText}>Step 2 of 7</Text>
           <View style={styles.progressBar}><View style={[styles.progressFill, { width: '28%' }]} /></View>
@@ -69,21 +100,21 @@ export default function CreateExperienceStep2() {
           <Text style={styles.subtitle}>Set where your experience starts and ends</Text>
 
           <Text style={styles.sectionTitle}>Starting Location*</Text>
-          <MapView 
-          provider={PROVIDER_GOOGLE}
-          style={styles.mapPreview} region={{
-            latitude: startingLocation?.latitude || 37.78825,
-            longitude: startingLocation?.longitude || -122.4324,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}>
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            style={styles.mapPreview} region={{
+              latitude: startingLocation?.latitude || 37.78825,
+              longitude: startingLocation?.longitude || -122.4324,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}>
             {startingLocation && <Marker coordinate={startingLocation} />}
           </MapView>
           <TextInput
             style={styles.input}
             placeholder="Enter address"
             value={startingAddress}
-            onChangeText={setStartingAddress}
+            onChangeText={updateStartingLocationFromAddress}
           />
 
           <Text style={styles.sectionTitle}>Ending Location*</Text>
@@ -94,21 +125,21 @@ export default function CreateExperienceStep2() {
 
           {!sameLocation && (
             <>
-              <MapView 
-              provider={PROVIDER_GOOGLE}
-              style={styles.mapPreview} region={{
-                latitude: endingLocation?.latitude || 37.78825,
-                longitude: endingLocation?.longitude || -122.4324,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-              }}>
+              <MapView
+                provider={PROVIDER_GOOGLE}
+                style={styles.mapPreview} region={{
+                  latitude: endingLocation?.latitude || 37.78825,
+                  longitude: endingLocation?.longitude || -122.4324,
+                  latitudeDelta: 0.01,
+                  longitudeDelta: 0.01,
+                }}>
                 {endingLocation && <Marker coordinate={endingLocation} />}
               </MapView>
               <TextInput
                 style={styles.input}
                 placeholder="Enter address"
                 value={endingAddress}
-                onChangeText={setEndingAddress}
+                onChangeText={updateEndingLocationFromAddress}
               />
             </>
           )}
