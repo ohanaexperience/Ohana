@@ -13,50 +13,53 @@ import {
 } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, Stack } from 'expo-router';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { handlePhotoUpload } from '../utils/utils';
-import MapLocationPicker from '../../components/MapLocationPicker';
+import * as ImagePicker from 'expo-image-picker';
+import { useRouter, Stack } from 'expo-router';
 import KeyboardAwareScreen from '../../components/KeyboardAwareScreen';
 
 export default function CreateExperienceStep2() {
   const router = useRouter();
 
-  const [startingLocation, setStartingLocation] = useState(null);
+  const [startingLocation, setStartingLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [startingAddress, setStartingAddress] = useState('');
-  const [endingLocation, setEndingLocation] = useState(null);
+  const [endingLocation, setEndingLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [endingAddress, setEndingAddress] = useState('');
   const [sameLocation, setSameLocation] = useState(true);
   const [meetingInstructions, setMeetingInstructions] = useState('');
   const [imageUri, setImageUri] = useState(null);
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') return;
-      let location = await Location.getCurrentPositionAsync({});
-      const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      };
-      setStartingLocation(coords);
-      setEndingLocation(coords);
-    })();
-  }, []);
+  (async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.warn('Permission to access location was denied');
+      return;
+    }
 
-  const updateLocationFromAddress = async (address, setAddress, setLocation) => {
-    setAddress(address);
-    try {
-      const geocode = await Location.geocodeAsync(address);
-      if (geocode.length > 0) {
-        const coord = {
-          latitude: geocode[0].latitude,
-          longitude: geocode[0].longitude,
-        };
-        setLocation(coord);
-      }
-    } catch (e) {
-      console.warn('Geocode failed', e);
+    const location = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.Highest,
+    });
+    console.log('Current location:', location);
+    const coords = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+
+    setStartingLocation(coords);
+    setEndingLocation(coords);
+  })();
+}, []);
+
+  const handlePickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.7,
+    });
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
     }
   };
 
@@ -64,84 +67,133 @@ export default function CreateExperienceStep2() {
     router.push('./step3');
   };
 
+  const updateStartingLocationFromAddress = async (address) => {
+    setStartingAddress(address);
+    try {
+      const geocode = await Location.geocodeAsync(address);
+      if (geocode.length > 0) {
+        setStartingLocation({
+          latitude: geocode[0].latitude,
+          longitude: geocode[0].longitude,
+        });
+      }
+    } catch (e) {
+      console.warn('Geocode failed', e);
+    }
+  };
+
+  const updateEndingLocationFromAddress = async (address) => {
+    setEndingAddress(address);
+    try {
+      const geocode = await Location.geocodeAsync(address);
+      if (geocode.length > 0) {
+        setEndingLocation({
+          latitude: geocode[0].latitude,
+          longitude: geocode[0].longitude,
+        });
+      }
+    } catch (e) {
+      console.warn('Geocode failed', e);
+    }
+  };
+
   return (
     <KeyboardAwareScreen>
-        {/* <Stack.Screen options={{ title: 'Create Experience' }} /> */}
-        
-          <Text style={styles.stepText}>Step 2 of 7</Text>
-          <View style={styles.progressBar}><View style={[styles.progressFill, { width: '28%' }]} /></View>
+      <Text style={styles.stepText}>Step 2 of 7</Text>
+      <View style={styles.progressBar}><View style={[styles.progressFill, { width: '28%' }]} /></View>
 
-          <Text style={styles.title}>Location Meeting Point</Text>
-          <Text style={styles.subtitle}>Set where your experience starts and ends</Text>
+      <Text style={styles.title}>Location Meeting Point</Text>
+      <Text style={styles.subtitle}>Set where your experience starts and ends</Text>
 
-          <Text style={styles.sectionTitle}>Starting Location*</Text>
-          <MapLocationPicker
-            location={startingLocation}
-            setLocation={setStartingLocation}
-            onLocationChange={async (coord) => {
+      <Text style={styles.sectionTitle}>Starting Location*</Text>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={styles.mapPreview} region={{
+          latitude: startingLocation?.latitude || 37.78825,
+          longitude: startingLocation?.longitude || -122.4324,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}>
+        {startingLocation && (
+          <Marker
+            coordinate={startingLocation}
+            draggable
+            onDragEnd={async (e) => {
+              const coord = e.nativeEvent.coordinate;
               setStartingLocation(coord);
               const [result] = await Location.reverseGeocodeAsync(coord);
               setStartingAddress(`${result.name}, ${result.city}, ${result.region}`);
             }}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Enter address"
-            value={startingAddress}
-            onChangeText={(text) => updateLocationFromAddress(text, setStartingAddress, setStartingLocation)}
-          />
+        )}
+      </MapView>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter address"
+        value={startingAddress}
+        onChangeText={updateStartingLocationFromAddress}
+      />
 
-          <Text style={styles.sectionTitle}>Ending Location*</Text>
-          <View style={styles.checkboxRow}>
-            <Checkbox value={!sameLocation} onValueChange={() => setSameLocation(!sameLocation)} />
-            <Text style={styles.checkboxLabel}>Different from Starting Location</Text>
-          </View>
+      <Text style={styles.sectionTitle}>Ending Location*</Text>
+      <View style={styles.checkboxRow}>
+        <Checkbox value={!sameLocation} onValueChange={() => setSameLocation(!sameLocation)} />
+        <Text style={styles.checkboxLabel}>Different from Starting Location</Text>
+      </View>
 
-          {!sameLocation && (
-            <>
-              <MapLocationPicker
-                location={endingLocation}
-                setLocation={setEndingLocation}
-                onLocationChange={async (coord) => {
+      {!sameLocation && (
+        <>
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            style={styles.mapPreview} region={{
+              latitude: endingLocation?.latitude || 37.78825,
+              longitude: endingLocation?.longitude || -122.4324,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}>
+            {endingLocation && (
+              <Marker
+                coordinate={endingLocation}
+                draggable
+                onDragEnd={async (e) => {
+                  const coord = e.nativeEvent.coordinate;
                   setEndingLocation(coord);
                   const [result] = await Location.reverseGeocodeAsync(coord);
                   setEndingAddress(`${result.name}, ${result.city}, ${result.region}`);
                 }}
               />
-              <TextInput
-                style={styles.input}
-                placeholder="Enter address"
-                value={endingAddress}
-                onChangeText={(text) => updateLocationFromAddress(text, setEndingAddress, setEndingLocation)}
-              />
-            </>
-          )}
-
-          <Text style={styles.sectionTitle}>Meeting Instructions*</Text>
-          <TextInput
-            style={[styles.input, { height: 100, textAlignVertical: 'top' }]}
-            placeholder="Provide detailed instructions for finding the meeting point"
-            value={meetingInstructions}
-            onChangeText={setMeetingInstructions}
-            multiline
-          />
-
-          <Text style={styles.sectionTitle}>Upload Location Image (optional)</Text>
-          <TouchableOpacity style={styles.uploadBox} onPress={async () => {
-            const uri = await handlePhotoUpload();
-            if (uri) setImageUri(uri);
-          }}>
-            {imageUri ? (
-              <Image source={{ uri: imageUri }} style={styles.image} />
-            ) : (
-              <Text style={{ fontSize: 32, color: '#888' }}>+</Text>
             )}
-          </TouchableOpacity>
+          </MapView>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter address"
+            value={endingAddress}
+            onChangeText={updateEndingLocationFromAddress}
+          />
+        </>
+      )}
 
-          <TouchableOpacity style={styles.button} onPress={handleContinue}>
-            <Text style={styles.buttonText}>Continue to Step 3</Text>
-          </TouchableOpacity>
-        </KeyboardAwareScreen>
+      <Text style={styles.sectionTitle}>Meeting Instructions*</Text>
+      <TextInput
+        style={[styles.input, { height: 100, textAlignVertical: 'top' }]}
+        placeholder="Provide detailed instructions for finding the meeting point"
+        value={meetingInstructions}
+        onChangeText={setMeetingInstructions}
+        multiline
+      />
+
+      <Text style={styles.sectionTitle}>Upload Location Image (optional)</Text>
+      <TouchableOpacity style={styles.uploadBox} onPress={handlePickImage}>
+        {imageUri ? (
+          <Image source={{ uri: imageUri }} style={styles.image} />
+        ) : (
+          <Text style={{ fontSize: 32, color: '#888' }}>+</Text>
+        )}
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={handleContinue}>
+        <Text style={styles.buttonText}>Continue to Step 3</Text>
+      </TouchableOpacity>
+    </KeyboardAwareScreen>
   );
 }
 
