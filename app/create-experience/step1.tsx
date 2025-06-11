@@ -10,12 +10,14 @@ import {
   TouchableWithoutFeedback,
   Platform,
   ScrollView,
+  KeyboardAvoidingView
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useNavigation } from 'expo-router';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useAuthStore } from '../store/auth';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import KeyboardAwareScreen from '../../components/KeyboardAwareScreen';
 
 import {
   BACKEND_URL,
@@ -88,121 +90,117 @@ export default function CreateExperienceStep1() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={[styles.container, { paddingTop: Platform.OS === 'android' ? 40 : 60 }]}>
-        <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-          <Text style={styles.stepText}>Step 1 of 7</Text>
-          <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: '14%' }]} />
-          </View>
+    <KeyboardAwareScreen>
+      <Text style={styles.stepText}>Step 1 of 7</Text>
+      <View style={styles.progressBar}>
+        <View style={[styles.progressFill, { width: '14%' }]} />
+      </View>
 
-          <Text style={styles.title}>The Basics</Text>
-          <Text style={styles.subtitle}>Let's start with the fundamental details of your experience</Text>
+      <Text style={styles.title}>The Basics</Text>
+      <Text style={styles.subtitle}>Let's start with the fundamental details of your experience</Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Experience Title*"
-            value={title}
-            onChangeText={setTitle}
-            placeholderTextColor="#D3D3D3"
-          />
+      <TextInput
+        style={styles.input}
+        placeholder="Experience Title*"
+        value={title}
+        onChangeText={setTitle}
+        placeholderTextColor="#D3D3D3"
+      />
 
-          <TextInput
-            style={[styles.input, { height: 80, textAlignVertical: 'top' }]}
-            placeholder="Short Tagline*"
-            multiline
-            maxLength={150}
-            value={tagline}
-            onChangeText={setTagline}
-            placeholderTextColor="#D3D3D3"
-          />
+      <TextInput
+        style={[styles.input, { height: 80, textAlignVertical: 'top' }]}
+        placeholder="Short Tagline*"
+        multiline
+        maxLength={150}
+        value={tagline}
+        onChangeText={setTagline}
+        placeholderTextColor="#D3D3D3"
+      />
 
-          <DropDownPicker
-            open={categoryOpen}
-            value={category}
-            items={categories}
-            setOpen={setCategoryOpen}
-            setValue={setCategory}
-            setItems={setCategories}
-            placeholder="Select category*"
-            style={styles.dropdown}
-            containerStyle={{ marginBottom: 16 }}
-            zIndex={3000}
-            zIndexInverse={1000}
-            listMode="SCROLLVIEW"
-          />
+      <DropDownPicker
+        open={categoryOpen}
+        value={category}
+        items={categories}
+        setOpen={setCategoryOpen}
+        setValue={setCategory}
+        setItems={setCategories}
+        placeholder="Select category*"
+        style={styles.dropdown}
+        containerStyle={{ marginBottom: 16 }}
+        zIndex={3000}
+        zIndexInverse={1000}
+        listMode="SCROLLVIEW"
+      />
 
-          <DropDownPicker
-            open={subCategoryOpen}
-            value={subCategory}
-            items={subCategories}
-            setOpen={setSubCategoryOpen}
-            setValue={setSubCategory}
-            setItems={setSubCategories}
-            placeholder="Select sub-category*"
-            style={[styles.dropdown, { backgroundColor: category ? '#fff' : '#f5f5f5' }]}
-            containerStyle={{ marginBottom: 16 }}
-            zIndex={2000}
-            zIndexInverse={2000}
-            listMode="SCROLLVIEW"
-            disabled={!category}
-          />
+      <DropDownPicker
+        open={subCategoryOpen}
+        value={subCategory}
+        items={subCategories}
+        setOpen={setSubCategoryOpen}
+        setValue={setSubCategory}
+        setItems={setSubCategories}
+        placeholder="Select sub-category*"
+        style={[styles.dropdown, { backgroundColor: category ? '#fff' : '#f5f5f5' }]}
+        containerStyle={{ marginBottom: 16 }}
+        zIndex={2000}
+        zIndexInverse={2000}
+        listMode="SCROLLVIEW"
+        disabled={!category}
+      />
 
-          <DropDownPicker
-            open={languagesOpen}
-            value={languages}
-            items={languageOptions}
-            setOpen={setLanguagesOpen}
-            setValue={setLanguages}
-            multiple
-            min={0}
-            max={3}
-            placeholder="Languages Spoken*"
-            style={styles.dropdown}
-            containerStyle={{ marginBottom: 16 }}
-            zIndex={1500}
-            zIndexInverse={1500}
-            listMode="SCROLLVIEW"
-          />
+      <DropDownPicker
+        open={languagesOpen}
+        value={languages}
+        items={languageOptions}
+        setOpen={setLanguagesOpen}
+        setValue={setLanguages}
+        multiple
+        min={0}
+        max={3}
+        placeholder="Languages Spoken*"
+        style={styles.dropdown}
+        containerStyle={{ marginBottom: 16 }}
+        zIndex={1500}
+        zIndexInverse={1500}
+        listMode="SCROLLVIEW"
+      />
 
-          <Text style={styles.label}>Experience Type*</Text>
-          <View style={styles.typeRow}>
-            {['indoor', 'outdoor', 'both'].map((type) => (
-              <TouchableOpacity
-                key={type}
-                style={[styles.typeButton, experienceType === type && { backgroundColor: '#333' }]}
-                onPress={() => setExperienceType(type as any)}
-              >
-                <MaterialCommunityIcons
-                  name={type === 'indoor' ? 'home-outline' : type === 'outdoor' ? 'pine-tree' : 'home-group'}
-                  size={24}
-                  color={experienceType === type ? '#fff' : '#000'}
-                />
-                <Text style={[styles.typeText, experienceType === type && { color: '#fff' }]}>{type}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          <TextInput
-            style={[styles.input, { height: 120, textAlignVertical: 'top' }]}
-            placeholder="Full Description*"
-            multiline
-            value={description}
-            onChangeText={setDescription}
-            placeholderTextColor="#D3D3D3"
-          />
-
-          <TouchableOpacity style={styles.button} onPress={handleContinue}>
-            <Text style={styles.buttonText}>Continue to Step 2</Text>
+      <Text style={styles.label}>Experience Type*</Text>
+      <View style={styles.typeRow}>
+        {['indoor', 'outdoor', 'both'].map((type) => (
+          <TouchableOpacity
+            key={type}
+            style={[styles.typeButton, experienceType === type && { backgroundColor: '#333' }]}
+            onPress={() => setExperienceType(type as any)}
+          >
+            <MaterialCommunityIcons
+              name={type === 'indoor' ? 'home-outline' : type === 'outdoor' ? 'pine-tree' : 'home-group'}
+              size={24}
+              color={experienceType === type ? '#fff' : '#000'}
+            />
+            <Text style={[styles.typeText, experienceType === type && { color: '#fff' }]}>{type}</Text>
           </TouchableOpacity>
-        </ScrollView>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+        ))}
+      </View>
+
+      <TextInput
+        style={[styles.input, { height: 120, textAlignVertical: 'top' }]}
+        placeholder="Full Description*"
+        multiline
+        value={description}
+        onChangeText={setDescription}
+        placeholderTextColor="#D3D3D3"
+      />
+
+      <TouchableOpacity style={styles.button} onPress={handleContinue}>
+        <Text style={styles.buttonText}>Continue to Step 2</Text>
+      </TouchableOpacity>
+    </KeyboardAwareScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingHorizontal: 24, backgroundColor: '#fff' },
+  container: { flex: 1, backgroundColor: '#fff',padding: 12,},
   stepText: { fontSize: 14, fontWeight: '500', marginBottom: 8 },
   progressBar: {
     height: 4,
@@ -255,4 +253,5 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
   typeText: { fontSize: 14, fontWeight: '500', marginTop: 4 },
+  
 });
