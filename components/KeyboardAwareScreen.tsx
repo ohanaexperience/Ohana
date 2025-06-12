@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingTop: Platform.OS === 'android' ? 12 : 0, // extra space in header container if needed
   },
   flex: {
     flex: 1,

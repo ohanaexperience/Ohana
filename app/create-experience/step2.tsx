@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import {
   View,
   Text,
@@ -16,11 +16,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
-import { useRouter, Stack } from 'expo-router';
+import { useRouter, useNavigation } from 'expo-router';
 import KeyboardAwareScreen from '../../components/KeyboardAwareScreen';
 
 export default function CreateExperienceStep2() {
   const router = useRouter();
+  const navigation = useNavigation();
 
   const [startingLocation, setStartingLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [startingAddress, setStartingAddress] = useState('');
@@ -29,6 +30,19 @@ export default function CreateExperienceStep2() {
   const [sameLocation, setSameLocation] = useState(true);
   const [meetingInstructions, setMeetingInstructions] = useState('');
   const [imageUri, setImageUri] = useState(null);
+
+  useLayoutEffect(() => {
+  navigation.setOptions({
+    title: 'Create Experience',
+    headerTitleAlign: 'center',
+    headerTitleStyle: {
+      paddingTop: Platform.OS === 'android' ? 8 : 0, // adjust as needed
+    },
+    headerStyle: {
+      paddingTop: Platform.OS === 'android' ? 12 : 0, // extra space in header container if needed
+    },
+  });
+}, [navigation]);
 
   useEffect(() => {
   (async () => {
