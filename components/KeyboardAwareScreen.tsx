@@ -23,7 +23,8 @@ export default function KeyboardAwareScreen({
 }: Props) {
   return (
     <SafeAreaView style={[styles.safeArea, style, ]} edges={['bottom', 'left', 'right']}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
         <KeyboardAwareScrollView
           style={styles.flex}
           contentContainerStyle={[
