@@ -9,9 +9,13 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 import KeyboardAwareScreen from '../../components/KeyboardAwareScreen';
 import { COMMON_STYLES as S, COLORS } from '../../constants/theme';
+import { useRouter, useNavigation } from 'expo-router';
 
 export default function CreateExperienceStep3() {
+    const router = useRouter();
+
   const [basePrice, setBasePrice] = useState('');
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const [groupRatesEnabled, setGroupRatesEnabled] = useState(false);
   const [group3Open, setGroup3Open] = useState(false);
@@ -78,6 +82,42 @@ export default function CreateExperienceStep3() {
   const [maxGuests, setMaxGuests] = useState('10');
   const [autoCancel, setAutoCancel] = useState(false);
 
+  const validateForm = () => {
+  const newErrors: { [key: string]: string } = {};
+
+  if (!basePrice || isNaN(Number(basePrice)) || Number(basePrice) <= 0) {
+    newErrors.basePrice = 'Enter a valid price';
+  }
+
+  if (!minGuests || isNaN(Number(minGuests)) || Number(minGuests) < 1) {
+    newErrors.minGuests = 'Minimum guests is 1';
+  }
+
+  if (!maxGuests || isNaN(Number(maxGuests)) || Number(maxGuests) < Number(minGuests) ) {
+    newErrors.maxGuests = 'Maximum guests must be greater than or equal to minimum guests';
+  }
+
+  if ( Number(maxGuests) > 10) {
+    newErrors.maxGuests = 'Maximum 10 guests';
+  }
+
+  if (!cancellationValue) {
+    newErrors.cancellationPolicy = 'Select a cancellation policy';
+  }
+
+  if (groupRatesEnabled) {
+    if (!group3Value && !group5Value) newErrors.group3 = 'Select one or both group discounts';
+  }
+
+  if (earlyBirdEnabled) {
+    if (!daysEarlyValue) newErrors.daysEarly = 'Select days in advance';
+    if (!earlyBirdDiscountValue) newErrors.earlyBird = 'Select early bird discount';
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
   const formData = {
     basePrice,
     cancellationPolicy: cancellationValue,
@@ -92,12 +132,18 @@ export default function CreateExperienceStep3() {
             discountPercentageFor5Plus: group5Value ? Number(group5Value) : undefined,
         };
     }
+    else{
+        formData.groupDiscounts = undefined;
+    }
 
     if (earlyBirdEnabled) {
         formData.earlyBirdRate = {
             daysInAdvance: daysEarlyValue ? Number(daysEarlyValue) : undefined,
             discountPercentage: earlyBirdDiscountValue ? Number(earlyBirdDiscountValue) : undefined,
         };
+    }
+    else {
+        formData.earlyBirdRate = undefined;
     }
 
     // Pretty print
@@ -124,6 +170,7 @@ export default function CreateExperienceStep3() {
           placeholderTextColor={COLORS.gray}
           keyboardType="numeric"
         />
+        {errors.basePrice && <Text style={errorStyle}>{errors.basePrice}</Text>}
       </View>
 
       <View style={cardStyle}>
@@ -165,8 +212,12 @@ export default function CreateExperienceStep3() {
                 zIndex={2000}
               />
             </View>
+
+            {errors.group3 && <Text style={errorStyle}>{errors.group3}</Text>}
+            
           </>
         )}
+        
       </View>
 
     
@@ -194,6 +245,7 @@ export default function CreateExperienceStep3() {
                 zIndex={1900}
               />
             </View>
+            
 
             <Text style={labelStyle}>Discount</Text>
             <View style={{ zIndex: 1800, marginBottom: 16 }}>
@@ -210,6 +262,8 @@ export default function CreateExperienceStep3() {
                 zIndex={1800}
             />
             </View>
+            {errors.daysEarly && <Text style={errorStyle}>{errors.daysEarly}</Text>}
+            {errors.earlyBird && <Text style={errorStyle}>{errors.earlyBird}</Text>}
           </>
         )}
       </View>
@@ -230,6 +284,7 @@ export default function CreateExperienceStep3() {
             zIndex={1000}
           />
         </View>
+        {errors.cancellationPolicy && <Text style={errorStyle}>{errors.cancellationPolicy}</Text>}
       </View>
 
       <View style={cardStyle}>
@@ -245,6 +300,7 @@ export default function CreateExperienceStep3() {
               placeholder="1"
               placeholderTextColor={COLORS.gray}
             />
+            
           </View>
           <View style={{ flex: 1, marginLeft: 8 }}>
             <Text style={labelStyle}>Maximum Guests*</Text>
@@ -256,8 +312,14 @@ export default function CreateExperienceStep3() {
               placeholder="10"
               placeholderTextColor={COLORS.gray}
             />
+            
           </View>
+         
         </View>
+
+        {errors.minGuests && <Text style={errorStyle}>{errors.minGuests}</Text>}
+        {errors.maxGuests && <Text style={errorStyle}>{errors.maxGuests}</Text>}
+
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
         <View style={{ marginRight: 12 }}>
             <Switch value={autoCancel} onValueChange={setAutoCancel} />
@@ -268,9 +330,19 @@ export default function CreateExperienceStep3() {
         </View>
       </View>
 
-      <TouchableOpacity style={[S.button, { marginTop: 24 }]}>
+    <TouchableOpacity
+        style={[S.button, { marginTop: 24, opacity: 1 }]}
+        onPress={() => {
+        if (validateForm()) {
+            router.push('./step4');
+        } else {
+        
+        }
+        }}
+        >
         <Text style={S.buttonText}>Continue to Step 4</Text>
-      </TouchableOpacity>
+    </TouchableOpacity>
+
     </KeyboardAwareScreen>
   );
 }
@@ -306,4 +378,10 @@ const dropdownStyle = {
 const rowStyle = {
   flexDirection: 'row',
   alignItems: 'center',
+};
+
+const errorStyle = {
+  color: '#EF4444',
+  fontSize: 12,
+  marginTop: 4,
 };
