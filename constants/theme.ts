@@ -9,7 +9,7 @@ export const COLORS = {
   darkGray: '#333',
   accent: '#0F172A',
   error: '#ff4d4f',
-  
+  placeholder: '#6B7280',
 };
 
 export const FONT_SIZES = {
@@ -66,6 +66,7 @@ export const COMMON_STYLES = {
     fontSize: FONT_SIZES.small,
     fontWeight: FONT_WEIGHTS.medium,
     marginBottom: 8,
+    paddingTop:12,
   },
   progressBar: {
     height: 4,

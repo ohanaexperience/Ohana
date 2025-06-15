@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import {
   View,
   Text,
@@ -12,27 +12,73 @@ import { Ionicons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import KeyboardAwareScreen from '../../components/KeyboardAwareScreen';
 import { COMMON_STYLES as S, COLORS } from '../../constants/theme';
+import { useExperienceStore } from '../store/experience';
+import { useRouter, useNavigation } from 'expo-router';
 
 export default function CreateExperienceStep5() {
-  const [includedItems, setIncludedItems] = useState({
-    food: false,
-    drinks: false,
-    transport: false,
-    equipment: false,
-  });
+       const router = useRouter();
+        const navigation = useNavigation();
+  const { step5, setStep5 } = useExperienceStore();
 
-  const [whatToBring, setWhatToBring] = useState('');
-  const [physicalActivityLevel, setPhysicalActivityLevel] = useState(null);
+  const [includedItems, setIncludedItems] = useState<string[]>(step5.includedItems);
+  const [thingsToBring, setThingsToBring] = useState(step5.thingsToBring);
+  const [activityLevel, setActivityLevel] = useState(step5.activityLevel);
+  const [accessibilityNotes, setAccessibilityNotes] = useState(step5.accessibilityNotes);
+
   const [ageGroupOpen, setAgeGroupOpen] = useState(false);
-  const [ageGroupValue, setAgeGroupValue] = useState(null);
+  const [ageGroupValue, setAgeGroupValue] = useState(step5.recommendedAge);
   const [ageGroupOptions, setAgeGroupOptions] = useState([
     { label: 'Kids (6-12)', value: 'kids' },
     { label: 'Teens (13-17)', value: 'teens' },
     { label: 'Adults (18+)', value: 'adults' },
     { label: 'All Ages', value: 'all' },
   ]);
-  const [accessibility, setAccessibility] = useState('');
 
+  const [error, setError] = useState('');
+
+const handleContinue = () => {
+  if (!step5.activityLevel) {
+    setError('Please select a physical activity level.');
+    return;
+  }
+
+  if (!step5.recommendedAge) {
+    setError('Please select a recommended age group.');
+    return;
+  }
+
+  if (!step5.accessibilityNotes.trim()) {
+    setError('Please enter accessibility information.');
+    return;
+  }
+
+  setError('');
+  router.push('./step6');
+};
+
+  const toggleIncluded = (item: string) => {
+    setIncludedItems((prev) =>
+      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
+    );
+  };
+
+  useEffect(() => {
+    setStep5({
+      includedItems,
+      thingsToBring,
+      activityLevel,
+      recommendedAge: ageGroupValue,
+      accessibilityNotes,
+    });
+  }, [includedItems, thingsToBring, activityLevel, ageGroupValue, accessibilityNotes]);
+
+  useLayoutEffect(() => {
+          navigation.setOptions({
+            title: 'Create Experience',
+            headerTitleAlign: 'center',
+          });
+        }, [navigation]);
+console.log('Step 5 data:', step5);
   return (
     <KeyboardAwareScreen>
       <Text style={S.stepText}>Step 5 of 7</Text>
@@ -41,22 +87,24 @@ export default function CreateExperienceStep5() {
       </View>
 
       <Text style={S.title}>What's Included</Text>
-      <Text style={S.subtitle}>Define what's included and requirements for your experience</Text>
+      <Text style={S.subtitle}>
+        Define what's included and requirements for your experience
+      </Text>
 
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
           <Text style={S.sectionTitle}>Included Items (Optional)</Text>
-          {Object.entries(includedItems).map(([key, value]) => (
-            <View key={key} style={styles.checkboxRow}>
+          {['food', 'drinks', 'transport', 'equipment'].map((item) => (
+            <View key={item} style={styles.checkboxRow}>
               <Checkbox
-                value={value}
-                onValueChange={(newValue) =>
-                  setIncludedItems({ ...includedItems, [key]: newValue })
-                }
+                value={includedItems.includes(item)}
+                onValueChange={() => toggleIncluded(item)}
                 style={styles.checkbox}
-                color={value ? COLORS.primary : undefined}
+                color={includedItems.includes(item) ? COLORS.primary : undefined}
               />
-              <Text style={styles.checkboxLabel}>{key.charAt(0).toUpperCase() + key.slice(1)}</Text>
+              <Text style={styles.checkboxLabel}>
+                {item.charAt(0).toUpperCase() + item.slice(1)}
+              </Text>
             </View>
           ))}
         </View>
@@ -66,23 +114,27 @@ export default function CreateExperienceStep5() {
           <TextInput
             style={[S.input, { minHeight: 80 }]}
             placeholder="List items guests should bring..."
-            placeholderTextColor={COLORS.gray}
+            placeholderTextColor={COLORS.placeholder}
             multiline
-            value={whatToBring}
-            onChangeText={setWhatToBring}
+            value={thingsToBring}
+            onChangeText={setThingsToBring}
           />
         </View>
 
         <View style={styles.card}>
           <Text style={S.sectionTitle}>Physical Activity Level</Text>
-          {['Low - Minimal physical activity', 'Medium - Moderate activity required', 'High - Intense physical activity'].map((label, idx) => (
+          {[
+            { label: 'Low - Minimal physical activity', value: 'low' },
+            { label: 'Medium - Moderate activity required', value: 'medium' },
+            { label: 'High - Intense physical activity', value: 'high' },
+          ].map(({ label, value }) => (
             <TouchableOpacity
-              key={label}
+              key={value}
               style={styles.radioRow}
-              onPress={() => setPhysicalActivityLevel(idx)}
+              onPress={() => setActivityLevel(value)}
             >
               <Ionicons
-                name={physicalActivityLevel === idx ? 'radio-button-on' : 'radio-button-off'}
+                name={activityLevel === value ? 'radio-button-on' : 'radio-button-off'}
                 size={20}
                 color={COLORS.primary}
                 style={{ marginRight: 8 }}
@@ -102,8 +154,13 @@ export default function CreateExperienceStep5() {
             setValue={setAgeGroupValue}
             setItems={setAgeGroupOptions}
             placeholder="Select age range"
+            
             style={dropdownStyle}
-            dropDownContainerStyle={{ borderColor: '#ccc', backgroundColor: '#fff', zIndex: 1000 }}
+            dropDownContainerStyle={{
+              borderColor: '#ccc',
+              backgroundColor: '#fff',
+              zIndex: 1000,
+            }}
             zIndex={1000}
           />
 
@@ -111,16 +168,20 @@ export default function CreateExperienceStep5() {
           <TextInput
             style={[S.input, { minHeight: 80 }]}
             placeholder="Describe any accessibility considerations..."
-            placeholderTextColor={COLORS.gray}
+            placeholderTextColor={COLORS.placeholder}
             multiline
-            value={accessibility}
-            onChangeText={setAccessibility}
+            value={accessibilityNotes}
+            onChangeText={setAccessibilityNotes}
           />
         </View>
 
-        <TouchableOpacity style={[S.button, { marginTop: 24 }]}> 
-          <Text style={S.buttonText}>Continue to Step 6</Text>
+        <TouchableOpacity style={[S.button, { marginTop: 24 }]} onPress={handleContinue}>
+        <Text style={S.buttonText}>Continue to Step 6</Text>
         </TouchableOpacity>
+
+        {error ? (
+        <Text style={{ color: 'red', marginTop: 8, textAlign: 'center' }}>{error}</Text>
+        ) : null}
       </ScrollView>
     </KeyboardAwareScreen>
   );
