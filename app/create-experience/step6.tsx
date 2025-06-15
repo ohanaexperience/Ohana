@@ -9,10 +9,12 @@ import {
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Ionicons } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
+
 import KeyboardAwareScreen from '../../components/KeyboardAwareScreen';
 import { COMMON_STYLES as S, COLORS } from '../../constants/theme';
 import { useExperienceStore } from '../store/experience';
+import DatePicker from 'react-native-date-picker'
+import { format, parseISO } from 'date-fns';
 
 export default function CreateExperienceStep6() {
   const {
@@ -26,7 +28,10 @@ export default function CreateExperienceStep6() {
 
   const [timeSlotOpen, setTimeSlotOpen] = useState<number | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+  const [date, setDate] = useState(new Date())
+  
 
   const durationOptions = Array.from({ length: 10 }, (_, i) => ({
     label: `${i + 1} hour${i === 0 ? '' : 's'}`,
@@ -65,34 +70,6 @@ export default function CreateExperienceStep6() {
     setStep6({ availability: { ...step6.availability, timeSlots: newSlots } });
   };
 
-  const toLocalDateString = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = `${date.getMonth() + 1}`.padStart(2, '0');
-    const day = `${date.getDate()}`.padStart(2, '0');
-    return `${year}-${month}-${day}`;
-    };
-
-    const getLocalDate = (isoDate: string) => {
-  const [year, month, day] = isoDate.split('-').map(Number);
-  return new Date(year, month - 1, day); // JS Date uses 0-based months
-};
-
-function getSafeLocalDate(isoDate: string): Date {
-  const [year, month, day] = isoDate.split('-').map(Number);
-  return new Date(year, month - 1, day, 12); // Use noon to prevent timezone offset shifting
-}
-
-  const handleOneTimeDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-  if (event.type === 'set' && selectedDate) {
-    const year = selectedDate.getFullYear();
-    const month = `${selectedDate.getMonth() + 1}`.padStart(2, '0');
-    const day = `${selectedDate.getDate()}`.padStart(2, '0');
-    const localDateString = `${year}-${month}-${day}`;
-    setStep6({ availability: { ...step6.availability, startDate: localDateString } });
-  }
-  setShowDatePicker(false);
-};
-  
 
   const handleOneTimeTimeChange = (callback: (val: string) => string) => {
     const newTime = callback(step6.availability.timeSlots[0] || '10:00');
@@ -100,12 +77,12 @@ function getSafeLocalDate(isoDate: string): Date {
   };
 
   const handleRecurringTimeChange = (index: number, callback: (val: string) => string) => {
-  const current = step6.availability.timeSlots[index] || '10:00';
-  const updated = step6.availability.timeSlots.map((t, i) =>
-    i === index ? callback(current) : t
-  );
-  setStep6({ availability: { ...step6.availability, timeSlots: updated } });
-};
+    const current = step6.availability.timeSlots[index] || '10:00';
+    const updated = step6.availability.timeSlots.map((t, i) =>
+      i === index ? callback(current) : t
+    );
+    setStep6({ availability: { ...step6.availability, timeSlots: updated } });
+  };
 
   const handleAvailabilityTypeChange = (type: 'recurring' | 'one-time') => {
     if (step6.availabilityType !== type) {
@@ -125,7 +102,7 @@ function getSafeLocalDate(isoDate: string): Date {
   }, [durationValue]);
 
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-console.log('Step 6 data:', step6);
+  console.log('Step 6 data:', step6);
   return (
     <KeyboardAwareScreen>
       <Text style={S.stepText}>Step 6 of 7</Text>
@@ -228,40 +205,41 @@ console.log('Step 6 data:', step6);
             </>
           ) : (
             <>
+            
               <Text style={[S.sectionTitle, { marginTop: 16 }]}>Select a Date</Text>
               <TouchableOpacity
                 style={styles.dateButton}
                 onPress={() => setShowDatePicker(true)}
               >
                 <Text style={{ color: COLORS.text, fontWeight: '500' }}>
-                  {step6.availability.startDate
-                    ? new Date(step6.availability.startDate).toDateString()
+                {step6.availability.startDate
+                    ? format(parseISO(step6.availability.startDate), 'EEE, MMM d, yyyy')
                     : 'Pick a date'}
                 </Text>
               </TouchableOpacity>
-              {showDatePicker && (
-               <DateTimePicker
-  value={
-  step6.availability.startDate
-    ? new Date(step6.availability.startDate + 'T12:00:00')
-    : new Date()
-}
-  mode="date"
-  display={Platform.OS === 'ios' ? 'inline' : 'default'}
-  themeVariant="light"
-  onChange={(event, date) => {
-    if (event.type === 'set' && date) {
-      const localDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-      const year = localDate.getFullYear();
-      const month = `${localDate.getMonth() + 1}`.padStart(2, '0');
-      const day = `${localDate.getDate()}`.padStart(2, '0');
-      const formatted = `${year}-${month}-${day}`;
-      setStep6({ availability: { ...step6.availability, startDate: formatted } });
-    }
-    setShowDatePicker(false);
-  }}
-/>
-              )}
+              
+              <DatePicker
+                modal
+                mode="date"
+                open={showDatePicker}
+                date={date}
+                onConfirm={(selected) => {
+                    console.log('Selected date:', selected);
+
+                    
+                    const localDate = format(selected, 'yyyy-MM-dd'); // Local time, no timezone shifting
+                    setDate(new Date(localDate));
+                    setStep6({
+                        availability: {
+                        ...step6.availability,
+                        startDate: localDate,
+                        },
+                    });
+
+                    setShowDatePicker(false);
+                    }}
+                onCancel={() => setShowDatePicker(false)}
+                />
 
               <Text style={[S.sectionTitle, { marginTop: 16 }]}>Start Time</Text>
               <DropDownPicker
