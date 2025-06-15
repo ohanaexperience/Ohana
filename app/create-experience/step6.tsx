@@ -28,9 +28,9 @@ export default function CreateExperienceStep6() {
 
   const [timeSlotOpen, setTimeSlotOpen] = useState<number | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const [date, setDate] = useState(new Date())
+  const [ availabilityType, setAvailabilityType ] = useState<'recurring' | 'one-time'>( 'recurring');
   
 
   const durationOptions = Array.from({ length: 10 }, (_, i) => ({
@@ -39,15 +39,11 @@ export default function CreateExperienceStep6() {
   }));
 
   const [timeSlotOptions, setTimeSlotOptions] = useState(
-    Array.from({ length: 24 }, (_, hour) => {
-      const period = hour < 12 ? 'AM' : 'PM';
-      const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-      return {
-        label: `${displayHour}:00 ${period}`,
-        value: `${displayHour}:00 ${period}`,
-      };
-    })
-  );
+  Array.from({ length: 24 }, (_, hour) => {
+    const label = `${hour.toString().padStart(2, '0')}:00`;
+    return { label, value: label };
+  })
+);
 
   const toggleDay = (index: number) => {
     const days = step6.availability.daysOfWeek.includes(index)
@@ -85,21 +81,32 @@ export default function CreateExperienceStep6() {
   };
 
   const handleAvailabilityTypeChange = (type: 'recurring' | 'one-time') => {
-    if (step6.availabilityType !== type) {
-      const today = new Date().toISOString().split('T')[0];
-      const resetAvailability = {
+    setAvailabilityType(type);
+
+    const today = format(new Date(), 'yyyy-MM-dd');
+    const resetAvailability = {
         startDate: today,
         daysOfWeek: [],
-        timeSlots: type === 'one-time' ? [] : ['10:00'],
-      };
-      resetStep6({ duration: durationValue });
-      setStep6({ availabilityType: type, availability: resetAvailability });
-    }
-  };
+        timeSlots: ['10:00'],
+    };
 
-  useEffect(() => {
-    setStep6({ duration: durationValue });
-  }, [durationValue]);
+    resetStep6({ duration: durationValue });
+    setStep6({ availability: resetAvailability });
+    };
+
+    useEffect(() => {
+        if ( availabilityType === 'recurring' &&
+            step6.availability.timeSlots.length === 0
+            ) {
+                setStep6({
+                availability: {
+                    ...step6.availability,
+                    timeSlots: ['10:00'], // Or just don't show anything until they add
+                },
+                });
+            }
+    }, [availabilityType]);
+
 
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   console.log('Step 6 data:', step6);
@@ -136,12 +143,12 @@ export default function CreateExperienceStep6() {
                 key={type}
                 style={[
                   styles.toggleButton,
-                  step6.availabilityType === type && styles.toggleButtonSelected,
+                  availabilityType === type && styles.toggleButtonSelected,
                 ]}
                 onPress={() => handleAvailabilityTypeChange(type as 'recurring' | 'one-time')}
               >
                 <Text style={{
-                  color: step6.availabilityType === type ? '#fff' : COLORS.text,
+                  color: availabilityType === type ? '#fff' : COLORS.text,
                   fontWeight: '600',
                 }}>
                   {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -150,7 +157,7 @@ export default function CreateExperienceStep6() {
             ))}
           </View>
 
-          {step6.availabilityType === 'recurring' ? (
+          {availabilityType === 'recurring' ? (
             <>
               <Text style={[S.sectionTitle, { marginTop: 16 }]}>Days Available</Text>
               <View style={styles.daysRow}>
@@ -176,32 +183,41 @@ export default function CreateExperienceStep6() {
               <Text style={[S.sectionTitle, { marginTop: 16 }]}>Time Slots</Text>
               {step6.availability.timeSlots.map((value, index) => (
                 <View key={index} style={[styles.row, { marginBottom: 12 }]}>
-                  <View style={{ flex: 1, zIndex: 1000 - index }}>
+                    <View style={{ flex: 1, zIndex: 1000 - index }}>
                     <DropDownPicker
                         open={timeSlotOpen === index}
-                        value={step6.availability.timeSlots[index]}
+                        value={value}
                         items={timeSlotOptions}
                         setOpen={(open) => setTimeSlotOpen(open ? index : null)}
                         setValue={(cb) => handleRecurringTimeChange(index, cb)}
                         setItems={setTimeSlotOptions}
+                        placeholder="Select a time"
                         style={dropdownStyle}
                         dropDownContainerStyle={dropdownContainerStyle}
-                        />
+                    />
                     </View>
-                  {index === step6.availability.timeSlots.length - 1 ? (
-                    <TouchableOpacity onPress={handleAddTimeSlot} style={styles.addButton}>
-                      <Ionicons name="add" size={20} color="white" />
-                    </TouchableOpacity>
-                  ) : (
+
                     <TouchableOpacity
-                      onPress={() => handleRemoveTimeSlot(index)}
-                      style={[styles.addButton, { backgroundColor: 'black' }]}
+                    onPress={
+                        index === step6.availability.timeSlots.length - 1
+                        ? handleAddTimeSlot
+                        : () => handleRemoveTimeSlot(index)
+                    }
+                    style={[
+                        styles.addButton,
+                        index === step6.availability.timeSlots.length - 1
+                        ? {}
+                        : { backgroundColor: 'black' },
+                    ]}
                     >
-                      <Ionicons name="remove" size={20} color="white" />
+                    <Ionicons
+                        name={index === step6.availability.timeSlots.length - 1 ? 'add' : 'remove'}
+                        size={20}
+                        color="white"
+                    />
                     </TouchableOpacity>
-                  )}
                 </View>
-              ))}
+                ))}
             </>
           ) : (
             <>
