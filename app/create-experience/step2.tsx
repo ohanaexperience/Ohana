@@ -32,17 +32,11 @@ export default function CreateExperienceStep2() {
   const [imageUri, setImageUri] = useState(null);
 
   useLayoutEffect(() => {
-  navigation.setOptions({
-    title: 'Create Experience',
-    headerTitleAlign: 'center',
-    headerTitleStyle: {
-      paddingTop: Platform.OS === 'android' ? 8 : 0, // adjust as needed
-    },
-    headerStyle: {
-      paddingTop: Platform.OS === 'android' ? 12 : 0, // extra space in header container if needed
-    },
-  });
-}, [navigation]);
+      navigation.setOptions({
+        title: 'Create Experience',
+        headerTitleAlign: 'center',
+      });
+    }, [navigation]);
 
   useEffect(() => {
   (async () => {
@@ -54,6 +48,8 @@ export default function CreateExperienceStep2() {
 
     const location = await Location.getCurrentPositionAsync({
       accuracy: Location.Accuracy.Highest,
+      maximumAge:0,
+      enableHighAccuracy: true,
     });
     console.log('Current location:', location);
     const coords = {

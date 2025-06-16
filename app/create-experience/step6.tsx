@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import {
   View,
   Text,
@@ -16,8 +16,18 @@ import { COMMON_STYLES as S, COLORS } from '../../constants/theme';
 import { useExperienceStore } from '../store/experience';
 import DatePicker from 'react-native-date-picker';
 import { format, parseISO } from 'date-fns';
+import { useRouter, useNavigation } from 'expo-router';
 
 export default function CreateExperienceStep6() {
+    const router = useRouter();
+    const navigation = useNavigation();
+    useLayoutEffect(() => {
+              navigation.setOptions({
+                title: 'Create Experience',
+                headerTitleAlign: 'center',
+              });
+            }, [navigation]);
+
   const {
     step6,
     setStep6,

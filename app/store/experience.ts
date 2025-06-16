@@ -1,5 +1,25 @@
 import { create } from 'zustand';
 
+type GroupDiscounts = {
+  discountPercentageFor3Plus?: number;
+  discountPercentageFor5Plus?: number;
+};
+
+type EarlyBirdRate = {
+  daysInAdvance?: number;
+  discountPercentage?: number;
+};
+
+type Step3Data = {
+  basePrice: string;
+  cancellationPolicy: string | null;
+  minGuests: number;
+  maxGuests: number;
+  autoCancelIfMinNotMet: boolean;
+  groupDiscounts?: GroupDiscounts;
+  earlyBirdRate?: EarlyBirdRate;
+};
+
 // Type for Step 4 (media)
 type ExperienceImages = {
   coverPhotoUri: string | null;
@@ -26,6 +46,10 @@ type Step6Data = {
 };
 
 type ExperienceStore = {
+
+    step3: Step3Data;
+  setStep3: (data: Partial<Step3Data>) => void;
+
   experienceImages: ExperienceImages;
   setCoverPhotoUri: (uri: string) => void;
   addGalleryUri: (uri: string) => void;
@@ -42,10 +66,24 @@ type ExperienceStore = {
 
 export const useExperienceStore = create<ExperienceStore>((set) => ({
   // Step 4 state
-  experienceImages: {
-    coverPhotoUri: null,
-    galleryUris: [],
-  },
+  
+
+  step3: {
+    basePrice: '',
+    cancellationPolicy: null,
+    minGuests: 1,
+    maxGuests: 10,
+    autoCancelIfMinNotMet: false,
+    },
+    setStep3: (data) =>
+    set((state) => ({
+        step3: { ...state.step3, ...data },
+    })),
+    experienceImages: {
+        coverPhotoUri: null,
+        galleryUris: [],
+    },
+  
   setCoverPhotoUri: (uri) =>
     set((state) => ({
       experienceImages: { ...state.experienceImages, coverPhotoUri: uri },

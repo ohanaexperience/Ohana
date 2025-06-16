@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,16 +10,30 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import KeyboardAwareScreen from '../../components/KeyboardAwareScreen';
 import { COMMON_STYLES as S, COLORS } from '../../constants/theme';
 import { useRouter, useNavigation } from 'expo-router';
+import { useExperienceStore } from '../store/experience';
 
 export default function CreateExperienceStep3() {
-    const router = useRouter();
+  const router = useRouter();
+  const navigation = useNavigation();
 
-  const [basePrice, setBasePrice] = useState('');
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Create Experience',
+      headerTitleAlign: 'center',
+    });
+  }, [navigation]);
+
+  const {
+    step3,
+    setStep3,
+  } = useExperienceStore();
+
+  const [basePrice, setBasePrice] = useState(step3.basePrice || '');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const [groupRatesEnabled, setGroupRatesEnabled] = useState(false);
+  const [groupRatesEnabled, setGroupRatesEnabled] = useState(!!step3.groupDiscounts);
   const [group3Open, setGroup3Open] = useState(false);
-  const [group3Value, setGroup3Value] = useState(null);
+  const [group3Value, setGroup3Value] = useState(step3.groupDiscounts?.discountPercentageFor3Plus ?? null);
   const [group3Options, setGroup3Options] = useState([
     { label: '5% discount', value: 5 },
     { label: '10% discount', value: 10 },
@@ -29,7 +43,7 @@ export default function CreateExperienceStep3() {
   ]);
 
   const [group5Open, setGroup5Open] = useState(false);
-  const [group5Value, setGroup5Value] = useState(null);
+  const [group5Value, setGroup5Value] = useState(step3.groupDiscounts?.discountPercentageFor5Plus ?? null);
   const [group5Options, setGroup5Options] = useState([
     { label: '10% discount', value: 10 },
     { label: '15% discount', value: 15 },
@@ -38,49 +52,73 @@ export default function CreateExperienceStep3() {
     { label: '30% discount', value: 30 },
   ]);
 
-  const [earlyBirdEnabled, setEarlyBirdEnabled] = useState(false);
+  const [earlyBirdEnabled, setEarlyBirdEnabled] = useState(!!step3.earlyBirdRate);
   const [daysEarly, setDaysEarly] = useState(false);
-  const [daysEarlyValue, setDaysEarlyValue] = useState(null);
-  const [daysEarlyOptions, setDaysEarlyOptions] = useState([
-    { label: '14 days early', value: 14 },
-    { label: '15 days early', value: 15 },
-    { label: '16 days early', value: 16 },
-    { label: '17 days early', value: 17 },
-    { label: '18 days early', value: 18 },
-    { label: '19 days early', value: 19 },
-    { label: '20 days early', value: 20 },
-    { label: '21 days early', value: 21 },
-    { label: '22 days early', value: 22 },
-    { label: '23 days early', value: 23 },
-    { label: '24 days early', value: 24 },
-    { label: '25 days early', value: 25 },
-    { label: '26 days early', value: 26 },
-    { label: '27 days early', value: 27 },
-    { label: '28 days early', value: 28 },
-    { label: '29 days early', value: 29 },
-    { label: '30 days early', value: 30 },
-  ]);
+  const [daysEarlyValue, setDaysEarlyValue] = useState(step3.earlyBirdRate?.daysInAdvance ?? null);
+  const [daysEarlyOptions, setDaysEarlyOptions] = useState(Array.from({ length: 17 }, (_, i) => ({
+    label: `${14 + i} days early`,
+    value: 14 + i
+  })));
 
-    const [earlyBirdDiscountOpen, setEarlyBirdDiscountOpen] = useState(false);
-    const [earlyBirdDiscountValue, setEarlyBirdDiscountValue] = useState(null);
-    const [earlyBirdDiscountOptions, setEarlyBirdDiscountOptions] = useState([
+  const [earlyBirdDiscountOpen, setEarlyBirdDiscountOpen] = useState(false);
+  const [earlyBirdDiscountValue, setEarlyBirdDiscountValue] = useState(step3.earlyBirdRate?.discountPercentage ?? null);
+  const [earlyBirdDiscountOptions, setEarlyBirdDiscountOptions] = useState([
     { label: '5% discount', value: 5 },
     { label: '10% discount', value: 10 },
     { label: '15% discount', value: 15 },
     { label: '25% discount', value: 25 },
-    ]);
+  ]);
 
   const [cancellationOpen, setCancellationOpen] = useState(false);
-  const [cancellationValue, setCancellationValue] = useState(null);
+  const [cancellationValue, setCancellationValue] = useState(step3.cancellationPolicy ?? null);
   const [cancellationOptions, setCancellationOptions] = useState([
     { label: 'Flexible (Full refund 24h prior)', value: 'flexible' },
     { label: 'Moderate (50% refund 24h prior)', value: 'moderate' },
     { label: 'Strict (No refund)', value: 'strict' },
   ]);
 
-  const [minGuests, setMinGuests] = useState('1');
-  const [maxGuests, setMaxGuests] = useState('10');
-  const [autoCancel, setAutoCancel] = useState(false);
+  const [minGuests, setMinGuests] = useState(step3.minGuests.toString());
+  const [maxGuests, setMaxGuests] = useState(step3.maxGuests.toString());
+  const [autoCancel, setAutoCancel] = useState(step3.autoCancelIfMinNotMet);
+
+  useEffect(() => {
+    const groupDiscounts = groupRatesEnabled ? {
+      discountPercentageFor3Plus: group3Value || undefined,
+      discountPercentageFor5Plus: group5Value || undefined,
+    } : undefined;
+
+    const earlyBirdRate = earlyBirdEnabled ? {
+      daysInAdvance: daysEarlyValue || undefined,
+      discountPercentage: earlyBirdDiscountValue || undefined,
+    } : undefined;
+
+    setStep3({
+      basePrice,
+      cancellationPolicy: cancellationValue,
+      minGuests: Number(minGuests),
+      maxGuests: Number(maxGuests),
+      autoCancelIfMinNotMet: autoCancel,
+      groupDiscounts,
+      earlyBirdRate,
+    });
+  }, [
+    basePrice,
+    cancellationValue,
+    minGuests,
+    maxGuests,
+    autoCancel,
+    groupRatesEnabled,
+    group3Value,
+    group5Value,
+    earlyBirdEnabled,
+    daysEarlyValue,
+    earlyBirdDiscountValue,
+  ]);
+
+  // ... rest of component remains unchanged
+
+// (No changes made to visual component JSX or styles)
+
 
   const validateForm = () => {
   const newErrors: { [key: string]: string } = {};
@@ -148,7 +186,7 @@ export default function CreateExperienceStep3() {
 
     // Pretty print
     console.log('Step 3 Form State:\n' + JSON.stringify(formData, null, 2));
-
+    console.log(step3)
   return (
     <KeyboardAwareScreen>
       <Text style={S.stepText}>Step 3 of 7</Text>
@@ -333,6 +371,7 @@ export default function CreateExperienceStep3() {
     <TouchableOpacity
         style={[S.button, { marginTop: 24, opacity: 1 }]}
         onPress={() => {
+            
         if (validateForm()) {
             router.push('./step4');
         } else {
