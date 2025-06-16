@@ -8,7 +8,7 @@ import {
   View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView, KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 
 type Props = {
   children: React.ReactNode;
@@ -22,26 +22,29 @@ export default function KeyboardAwareScreen({
   contentContainerStyle,
 }: Props) {
   return (
-    <SafeAreaView style={[styles.safeArea, style, ]} edges={['bottom', 'left', 'right']}>
-      
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
-        <KeyboardAwareScrollView
-          style={styles.flex}
-          contentContainerStyle={[
-            styles.content,
-            contentContainerStyle,
-            
-          ]}
-          enableOnAndroid
-          extraScrollHeight={Platform.OS === 'ios' ? 100 : 140}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          {children}
-          {Platform.OS === 'android' && <View style={styles.androidSpacer} />}
-        </KeyboardAwareScrollView>
+    <SafeAreaView style={[styles.safeArea, style]} edges={['bottom', 'left', 'right']}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAwareScrollView
+        style={styles.flex}
+        contentContainerStyle={[
+          styles.content,
+          contentContainerStyle,
+        ]}
+        enableOnAndroid
+        extraScrollHeight={Platform.OS === 'ios' ? 100 : 140}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        keyboardOpeningTime={0}
+        enableResetScrollToCoords={false} // helps avoid layout jumps
+      >
+        
+          <View style={styles.flex}>
+            {children}
+            {Platform.OS === 'android' && <View style={styles.androidSpacer} />}
+          </View>
+        
+      </KeyboardAwareScrollView>
       </TouchableWithoutFeedback>
-
     </SafeAreaView>
   );
 }
