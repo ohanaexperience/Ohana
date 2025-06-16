@@ -10,6 +10,16 @@ type EarlyBirdRate = {
   discountPercentage?: number;
 };
 
+type Step2Data = {
+  startingLocation: { latitude: number; longitude: number } | null;
+  startingAddress: string;
+  endingLocation: { latitude: number; longitude: number } | null;
+  endingAddress: string;
+  sameLocation: boolean;
+  meetingInstructions: string;
+  imageUri: string | null;
+};
+
 type Step3Data = {
   basePrice: string;
   cancellationPolicy: string | null;
@@ -46,8 +56,10 @@ type Step6Data = {
 };
 
 type ExperienceStore = {
+  step2: Step2Data;
+  setStep2: (data: Partial<Step2Data>) => void;
 
-    step3: Step3Data;
+  step3: Step3Data;
   setStep3: (data: Partial<Step3Data>) => void;
 
   experienceImages: ExperienceImages;
@@ -65,8 +77,19 @@ type ExperienceStore = {
 };
 
 export const useExperienceStore = create<ExperienceStore>((set) => ({
-  // Step 4 state
-  
+  step2: {
+    startingLocation: null,
+    startingAddress: '',
+    endingLocation: null,
+    endingAddress: '',
+    sameLocation: true,
+    meetingInstructions: '',
+    imageUri: null,
+  },
+  setStep2: (data) =>
+    set((state) => ({
+      step2: { ...state.step2, ...data },
+    })),
 
   step3: {
     basePrice: '',
@@ -74,16 +97,16 @@ export const useExperienceStore = create<ExperienceStore>((set) => ({
     minGuests: 1,
     maxGuests: 10,
     autoCancelIfMinNotMet: false,
-    },
-    setStep3: (data) =>
+  },
+  setStep3: (data) =>
     set((state) => ({
-        step3: { ...state.step3, ...data },
+      step3: { ...state.step3, ...data },
     })),
-    experienceImages: {
-        coverPhotoUri: null,
-        galleryUris: [],
-    },
-  
+
+  experienceImages: {
+    coverPhotoUri: null,
+    galleryUris: [],
+  },
   setCoverPhotoUri: (uri) =>
     set((state) => ({
       experienceImages: { ...state.experienceImages, coverPhotoUri: uri },
@@ -103,7 +126,6 @@ export const useExperienceStore = create<ExperienceStore>((set) => ({
       },
     })),
 
-  // Step 5 state
   step5: {
     includedItems: [],
     thingsToBring: '',
@@ -116,11 +138,10 @@ export const useExperienceStore = create<ExperienceStore>((set) => ({
       step5: { ...state.step5, ...data },
     })),
 
-  // Step 6 state
   step6: {
     duration: 1,
     availability: {
-      startDate: new Date().toISOString().split('T')[0], // Default to today
+      startDate: new Date().toISOString().split('T')[0],
       daysOfWeek: [],
       timeSlots: [],
     },

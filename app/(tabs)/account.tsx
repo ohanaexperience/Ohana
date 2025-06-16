@@ -71,7 +71,7 @@ export default function ProfileScreen() {
     } else if (label === 'Upgrade to Host') {
       router.push('../upgrade-to-host/step1');
     } else if (label === 'Create an Experience') {
-      router.push('/create-experience/step3');
+      router.push('/create-experience/step2');
     } else if (label === 'Log out') {
       signOut();
     }
