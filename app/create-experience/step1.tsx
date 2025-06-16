@@ -18,6 +18,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { useAuthStore } from '../store/auth';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import KeyboardAwareScreen from '../../components/KeyboardAwareScreen';
+import { useExperienceStore } from '../store/experience';
 
 import {
   BACKEND_URL,
@@ -27,6 +28,7 @@ export default function CreateExperienceStep1() {
   const router = useRouter();
   const navigation = useNavigation();
   const accessToken = useAuthStore((s) => s.user?.tokens.idToken);
+  const {step1, setStep1} = useExperienceStore();
 
   const [title, setTitle] = useState('');
   const [tagline, setTagline] = useState('');
@@ -50,6 +52,7 @@ export default function CreateExperienceStep1() {
   ];
 
   const [experienceType, setExperienceType] = useState<'indoor' | 'outdoor' | 'both' | null>(null);
+  const [formErrors, setFormErrors] = useState<{ message: string } | null>(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -61,7 +64,7 @@ export default function CreateExperienceStep1() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(BACKEND_URL+'/v1/host/categories', {
+        const res = await fetch(BACKEND_URL + '/v1/host/categories', {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -84,11 +87,32 @@ export default function CreateExperienceStep1() {
     }
   }, [category]);
 
-  const handleContinue = () => {
-    // router.push({ pathname: './step2', params: { title, tagline, category, subCategory, description, languages, experienceType } });
-      router.push('./step2');
-  };
+  useEffect(() => {
+    setStep1({
+      title,
+      tagline,
+      description,
+      category: category && subCategory ? { mainId: category, subId: subCategory } : undefined,
+      languages,
+      experienceType
+    });
+  }, [title, tagline, description, category, subCategory, languages, experienceType]);
 
+  const handleContinue = () => {
+    if (!title.trim()) return setFormErrors({ message: 'Please enter a title.' });
+    if (!tagline.trim()) return setFormErrors({ message: 'Please enter a tagline.' });
+    if (!category) return setFormErrors({ message: 'Please select a category.' });
+    if (!subCategory) return setFormErrors({ message: 'Please select a sub-category.' });
+    if (languages.length === 0) return setFormErrors({ message: 'Please select at least one language.' });
+    if (!experienceType) return setFormErrors({ message: 'Please choose an experience type.' });
+    if (description.trim().length < 10 || description.trim().length > 1000) {
+      return setFormErrors({ message: 'Description must be between 10 and 1000 characters.' });
+    }
+
+    setFormErrors(null);
+    router.push('./step2');
+  };
+  console.log('step1',step1)
   return (
     <KeyboardAwareScreen>
       <Text style={styles.stepText}>Step 1 of 7</Text>
@@ -106,9 +130,10 @@ export default function CreateExperienceStep1() {
         onChangeText={setTitle}
         placeholderTextColor="#D3D3D3"
       />
-
+      
       <TextInput
-        style={[styles.input, { height: 80, textAlignVertical: 'top' }]}
+        style={[styles.input, { height: 80, textAlignVertical: 'top' }]
+        }
         placeholder="Short Tagline*"
         multiline
         maxLength={150}
@@ -122,7 +147,10 @@ export default function CreateExperienceStep1() {
         value={category}
         items={categories}
         setOpen={setCategoryOpen}
-        setValue={setCategory}
+        setValue={(val) => {
+          setCategory(val);
+          setSubCategory(null);
+        }}
         setItems={setCategories}
         placeholder="Select category*"
         style={styles.dropdown}
@@ -184,14 +212,19 @@ export default function CreateExperienceStep1() {
       </View>
 
       <TextInput
-        style={[styles.input, { height: 120, textAlignVertical: 'top' }]}
+        style={[styles.input, { height: 120, textAlignVertical: 'top' }]
+        }
         placeholder="Full Description*"
         multiline
         value={description}
         onChangeText={setDescription}
         placeholderTextColor="#D3D3D3"
       />
-
+  {formErrors?.message ? (
+  <Text style={{ color: 'red', marginTop: 8, textAlign: 'center' }}>
+    {formErrors.message}
+  </Text>
+) : null}
       <TouchableOpacity style={styles.button} onPress={handleContinue}>
         <Text style={styles.buttonText}>Continue to Step 2</Text>
       </TouchableOpacity>
@@ -253,5 +286,4 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
   typeText: { fontSize: 14, fontWeight: '500', marginTop: 4 },
-  
 });

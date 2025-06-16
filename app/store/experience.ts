@@ -10,6 +10,18 @@ type EarlyBirdRate = {
   discountPercentage?: number;
 };
 
+type Step1Data = {
+  title: string;
+  tagline: string;
+  category: {
+    mainId: number;
+    subId: number;
+  };
+  languages: string[];
+  description: string;
+  experienceType: 'indoor' | 'outdoor' | 'both' | null;
+};
+
 type Step2Data = {
   startingLocation: { latitude: number; longitude: number } | null;
   startingAddress: string;
@@ -56,6 +68,9 @@ type Step6Data = {
 };
 
 type ExperienceStore = {
+  step1: Step1Data;
+  setStep1: (data: Partial<Step1Data>) => void;
+
   step2: Step2Data;
   setStep2: (data: Partial<Step2Data>) => void;
 
@@ -77,6 +92,18 @@ type ExperienceStore = {
 };
 
 export const useExperienceStore = create<ExperienceStore>((set) => ({
+  step1: {
+    title: '',
+    tagline: '',
+    category: { mainId: 0, subId: 0 },
+    languages: [],
+    description: '',
+  },
+  setStep1: (data) =>
+    set((state) => ({
+      step1: { ...state.step1, ...data },
+    })),
+
   step2: {
     startingLocation: null,
     startingAddress: '',
