@@ -28,11 +28,13 @@ export default function CreateExperienceStep5() {
   const [ageGroupOpen, setAgeGroupOpen] = useState(false);
   const [ageGroupValue, setAgeGroupValue] = useState(step5.recommendedAge);
   const [ageGroupOptions, setAgeGroupOptions] = useState([
-    { label: 'Kids (6-12)', value: 'kids' },
-    { label: 'Teens (13-17)', value: 'teens' },
-    { label: 'Adults (18+)', value: 'adults' },
-    { label: 'All Ages', value: 'all' },
-  ]);
+  { label: '18–25', value: '18-25' },
+  { label: '26–35', value: '26-35' },
+  { label: '36–45', value: '36-45' },
+  { label: '46–55', value: '46-55' },
+  { label: '56–65', value: '56-65' },
+  { label: '66+', value: '66+' },
+]);
 
   const [error, setError] = useState('');
 
@@ -176,7 +178,7 @@ console.log('Step 5 data:', step5);
         </View>
 
         <TouchableOpacity style={[S.button, { marginTop: 24 }]} onPress={handleContinue}>
-        <Text style={S.buttonText}>Continue to Step 6</Text>
+          <Text style={S.buttonText}>Continue to Step 6</Text>
         </TouchableOpacity>
 
         {error ? (

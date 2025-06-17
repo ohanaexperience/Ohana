@@ -70,6 +70,7 @@
     "react-native-screens": "~4.10.0",
     "react-native-web": "^0.20.0",
     "react-native-webview": "^13.13.5",
+    "tz-lookup": "^6.1.25",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

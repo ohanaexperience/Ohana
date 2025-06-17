@@ -145,6 +145,7 @@ export default function CreateExperienceStep3() {
 
   if (groupRatesEnabled) {
     if (!group3Value && !group5Value) newErrors.group3 = 'Select one or both group discounts';
+    
   }
 
   if (earlyBirdEnabled) {

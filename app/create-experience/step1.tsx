@@ -46,9 +46,9 @@ export default function CreateExperienceStep1() {
   const [languages, setLanguages] = useState([]);
   const [languagesOpen, setLanguagesOpen] = useState(false);
   const languageOptions = [
-    { label: 'English', value: 'English' },
-    { label: 'Thai', value: 'Thai' },
-    { label: 'Japanese', value: 'Japanese' },
+    { label: 'English', value: 'english' },
+    { label: 'Thai', value: 'thai' },
+    { label: 'Japanese', value: 'japanese' },
   ];
 
   const [experienceType, setExperienceType] = useState<'indoor' | 'outdoor' | 'both' | null>(null);

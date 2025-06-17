@@ -19,14 +19,14 @@ import { format, parseISO } from 'date-fns';
 import { useRouter, useNavigation } from 'expo-router';
 
 export default function CreateExperienceStep6() {
-    const router = useRouter();
-    const navigation = useNavigation();
-    useLayoutEffect(() => {
-              navigation.setOptions({
-                title: 'Create Experience',
-                headerTitleAlign: 'center',
-              });
-            }, [navigation]);
+  const router = useRouter();
+  const navigation = useNavigation();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Create Experience',
+      headerTitleAlign: 'center',
+    });
+  }, [navigation]);
 
   const {
     step6,
@@ -40,6 +40,7 @@ export default function CreateExperienceStep6() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [date, setDate] = useState(new Date());
   const [availabilityType, setAvailabilityType] = useState<'recurring' | 'one-time'>('recurring');
+  const [formError, setFormError] = useState<string | null>(null);
 
   const durationOptions = Array.from({ length: 10 }, (_, i) => ({
     label: `${i + 1} hour${i === 0 ? '' : 's'}`,
@@ -104,8 +105,33 @@ export default function CreateExperienceStep6() {
     }
   }, [availabilityType]);
 
+  const handleContinue = () => {
+    if (!step6.duration || step6.duration < 1) {
+      return setFormError('Please select a valid duration.');
+    }
+
+    if (availabilityType === 'recurring') {
+      if (step6.availability.daysOfWeek.length === 0) {
+        return setFormError('Please select at least one day.');
+      }
+      if (step6.availability.timeSlots.length === 0 || !step6.availability.timeSlots[0]) {
+        return setFormError('Please add at least one time slot.');
+      }
+    } else {
+      if (!step6.availability.startDate) {
+        return setFormError('Please pick a date.');
+      }
+      if (!step6.availability.timeSlots[0]) {
+        return setFormError('Please select a start time.');
+      }
+    }
+
+    setFormError(null);
+    router.push('./step7');
+  };
+
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-console.log('Step 6 Data:', step6);
+
   return (
     <KeyboardAwareScreen>
       <Text style={S.stepText}>Step 6 of 7</Text>
@@ -125,14 +151,14 @@ console.log('Step 6 Data:', step6);
             items={durationOptions}
             setOpen={setDurationOpen}
             setValue={(callback) => {
-                const value = callback(durationValue);
-                setDurationValue(value);
-                setStep6({ ...step6, duration: value });
+              const value = callback(durationValue);
+              setDurationValue(value);
+              setStep6({ ...step6, duration: value });
             }}
             setItems={() => {}}
             style={dropdownStyle}
             dropDownContainerStyle={dropdownContainerStyle}
-        />
+          />
         </View>
 
         <View style={styles.card}>
@@ -187,57 +213,57 @@ console.log('Step 6 Data:', step6);
               <Text style={[S.sectionTitle, { marginTop: 16 }]}>Time Slots</Text>
               {step6.availability.timeSlots.map((value, index) => (
                 <View key={index} style={[styles.row, { marginBottom: 12 }]}>
-                    <View style={{ flex: 1 }}>
-                        <TouchableOpacity
-                            onPress={() => setTimeSlotOpen(index)}
-                            style={styles.pickerButton}
-                        >
-                            <Text style={styles.pickerButtonText}>{value || 'Select a time'}</Text>
-                        </TouchableOpacity>
-                    </View>
-
+                  <View style={{ flex: 1 }}>
                     <TouchableOpacity
-                        onPress={
-                            index === step6.availability.timeSlots.length - 1
-                            ? handleAddTimeSlot
-                            : () => handleRemoveTimeSlot(index)
-                        }
-                        style={[
-                            styles.addButton,
-                            index === step6.availability.timeSlots.length - 1
-                            ? {}
-                            : { backgroundColor: 'black' },
-                        ]}
+                      onPress={() => setTimeSlotOpen(index)}
+                      style={styles.pickerButton}
                     >
-                        <Ionicons
-                            name={index === step6.availability.timeSlots.length - 1 ? 'add' : 'remove'}
-                            size={20}
-                            color="white"
-                        />
+                      <Text style={styles.pickerButtonText}>{value || 'Select a time'}</Text>
                     </TouchableOpacity>
+                  </View>
 
-                    <Modal visible={timeSlotOpen === index} transparent animationType="slide">
+                  <TouchableOpacity
+                    onPress={
+                      index === step6.availability.timeSlots.length - 1
+                        ? handleAddTimeSlot
+                        : () => handleRemoveTimeSlot(index)
+                    }
+                    style={[
+                      styles.addButton,
+                      index === step6.availability.timeSlots.length - 1
+                        ? {}
+                        : { backgroundColor: 'black' },
+                    ]}
+                  >
+                    <Ionicons
+                      name={index === step6.availability.timeSlots.length - 1 ? 'add' : 'remove'}
+                      size={20}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+
+                  <Modal visible={timeSlotOpen === index} transparent animationType="slide">
                     <View style={styles.modalOverlay}>
-                        <View style={styles.modalContent}>
+                      <View style={styles.modalContent}>
                         <Picker
-                            selectedValue={value}
-                            onValueChange={(val) => handleRecurringTimeChange(index, val)}
+                          selectedValue={value}
+                          onValueChange={(val) => handleRecurringTimeChange(index, val)}
                         >
-                            {timeSlotOptions.map(({ label, value }) => (
+                          {timeSlotOptions.map(({ label, value }) => (
                             <Picker.Item key={value} label={label} value={value} />
-                            ))}
+                          ))}
                         </Picker>
                         <TouchableOpacity
-                            onPress={() => setTimeSlotOpen(null)}
-                            style={styles.doneButton}
+                          onPress={() => setTimeSlotOpen(null)}
+                          style={styles.doneButton}
                         >
-                            <Text style={styles.doneButtonText}>Done</Text>
+                          <Text style={styles.doneButtonText}>Done</Text>
                         </TouchableOpacity>
-                        </View>
+                      </View>
                     </View>
-                    </Modal>
+                  </Modal>
                 </View>
-                ))}
+              ))}
             </>
           ) : (
             <>
@@ -311,7 +337,11 @@ console.log('Step 6 Data:', step6);
           )}
         </View>
 
-        <TouchableOpacity style={[S.button, { marginTop: 24 }]}>
+        {formError && (
+          <Text style={{ color: 'red', textAlign: 'center', marginBottom: 12 }}>{formError}</Text>
+        )}
+
+        <TouchableOpacity style={[S.button, { marginTop: 24 }]} onPress={handleContinue}>
           <Text style={S.buttonText}>Continue to Step 7</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -398,9 +428,6 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     fontWeight: '500',
   },
-
-  or: COLORS.text,
-// }
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.3)',
