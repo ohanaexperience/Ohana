@@ -7,16 +7,23 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      
       "env": {
-        "EXPO_DOCTOR_SKIP_DEPENDENCY_VERSION_CHECK": "1"
+        "APP_VARIANT": "development",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "1036045272087-m020u7sbmf6p4r08cikj61ufs2u6sl58.apps.googleusercontent.com"
       }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "preview"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "distribution": "store",
+      "autoIncrement": true,
+      "env": {
+        "APP_VARIANT": "production"
+      }
     }
   },
   "submit": {

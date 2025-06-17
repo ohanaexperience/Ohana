@@ -6,18 +6,30 @@ import { AntDesign } from '@expo/vector-icons';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { AccessToken, LoginManager, Profile } from 'react-native-fbsdk-next';
 import { useAuthStore } from './store/auth';
+import Constants from 'expo-constants';
+
+import {
+  GOOGLE_IOS_CLIENT_ID,
+  GOOGLE_WEB_CLIENT_ID,
+  BACKEND_URL,
+} from './env';
+
+
+console.log('GOOGLE_WEB_CLIENT_ID:', GOOGLE_WEB_CLIENT_ID);
+console.log('GOOGLE_IOS_CLIENT_ID:', GOOGLE_IOS_CLIENT_ID);
+console.log('process.env 📣',process.env);
 
 GoogleSignin.configure({
-  webClientId:
-    '1066232646154-6l2ujgt1vj65onuku5for4ec8pi5no6u.apps.googleusercontent.com',
-  iosClientId:
-    '1066232646154-qhk20dva6guf5r30dqoakbafnka5icv1.apps.googleusercontent.com',
+  webClientId: GOOGLE_WEB_CLIENT_ID,
+  iosClientId: GOOGLE_IOS_CLIENT_ID,
   offlineAccess: true,
 });
+
 
 export default function SignInScreen() {
   const router = useRouter();
   const setUser = useAuthStore((s) => s.setUser);
+  const setIsHost = useAuthStore((s) => s.setIsHost);
 
   const signInWithGoogle = async () => {
     try {
@@ -26,8 +38,9 @@ export default function SignInScreen() {
 
       if (response.type === 'success') {
         const { idToken: googleIdToken, user } = response.data;
+        console.log('googleIdToken',googleIdToken)
         const backendResponse = await fetch(
-          'https://ikfwakanfh.execute-api.us-east-1.amazonaws.com/dev/v1/auth/google/sign-in',
+          BACKEND_URL+'/v1/auth/google/sign-in',
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -60,6 +73,15 @@ export default function SignInScreen() {
           },
         });
 
+        const hostRes = await fetch(
+        BACKEND_URL+'/v1/host/profile',
+        {
+          headers: { Authorization: `Bearer ${IdToken}` },
+        }
+      );
+      const hostJson = await hostRes.json();
+      console.log('Host profile 🙋‍♂️:', hostJson);
+      setIsHost(hostJson.isActive === true);
         router.replace('/(tabs)');
       }
     } catch (err) {
@@ -67,38 +89,38 @@ export default function SignInScreen() {
     }
   };
 
-  const signInWithFacebook = async () => {
-    try {
-      const result = await LoginManager.logInWithPermissions([
-        'public_profile',
-      ]);
-      if (result.isCancelled) return;
+  // const signInWithFacebook = async () => {
+  //   try {
+  //     const result = await LoginManager.logInWithPermissions([
+  //       'public_profile',
+  //     ]);
+  //     if (result.isCancelled) return;
 
-      const tokenData = await AccessToken.getCurrentAccessToken();
-      if (!tokenData) throw new Error('Missing token');
-      const profile = await Profile.getCurrentProfile();
-      if (!profile) throw new Error('Missing profile');
+  //     const tokenData = await AccessToken.getCurrentAccessToken();
+  //     if (!tokenData) throw new Error('Missing token');
+  //     const profile = await Profile.getCurrentProfile();
+  //     if (!profile) throw new Error('Missing profile');
 
-      useAuthStore.getState().setUser({
-        provider: 'facebook',
-        id: profile.userID ?? '',
-        email: '',
-        name: profile.name ?? '',
-        photo: profile.imageURL ?? '',
-        tokens: {
-          idToken: tokenData.accessToken,
-          accessToken: tokenData.accessToken,
-          refreshToken: '',
-          expiresIn: 0,
-          tokenType: '',
-        },
-      });
+  //     useAuthStore.getState().setUser({
+  //       provider: 'facebook',
+  //       id: profile.userID ?? '',
+  //       email: '',
+  //       name: profile.name ?? '',
+  //       photo: profile.imageURL ?? '',
+  //       tokens: {
+  //         idToken: tokenData.accessToken,
+  //         accessToken: tokenData.accessToken,
+  //         refreshToken: '',
+  //         expiresIn: 0,
+  //         tokenType: '',
+  //       },
+  //     });
 
-      router.replace('/(tabs)');
-    } catch (err) {
-      console.error('Facebook Sign-In Error:', err);
-    }
-  };
+  //     router.replace('/(tabs)');
+  //   } catch (err) {
+  //     console.error('Facebook Sign-In Error:', err);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -116,7 +138,7 @@ export default function SignInScreen() {
         <Text style={styles.buttonText}>Continue with Google</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={signInWithFacebook}>
+      {/* <TouchableOpacity style={styles.button} onPress={signInWithFacebook}>
         <AntDesign
           name="facebook-square"
           size={20}
@@ -124,7 +146,7 @@ export default function SignInScreen() {
           style={styles.icon}
         />
         <Text style={styles.buttonText}>Continue with Facebook</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }

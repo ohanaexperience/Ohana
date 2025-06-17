@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -19,6 +21,7 @@
     <meta-data android:name="com.facebook.sdk.AutoInitEnabled" android:value="true"/>
     <meta-data android:name="com.facebook.sdk.AutoLogAppEventsEnabled" android:value="false"/>
     <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+    <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBDTHeWbGAnUpVAjyWereu_Hxoczcwan4w"/>
     <meta-data android:name="com.google.android.gms.wallet.api.enabled" android:value="true"/>
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
@@ -33,7 +36,6 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="ohanaapp"/>
-        <data android:scheme="com.ohanaexperiences.expoapp"/>
         <data android:scheme="exp+ohanaapp"/>
       </intent-filter>
       <intent-filter data-generated="true">
@@ -53,5 +55,6 @@
         <data android:scheme="@string/fb_login_protocol_scheme"/>
       </intent-filter>
     </activity>
+    <uses-library android:name="org.apache.http.legacy" android:required="false"/>
   </application>
 </manifest>

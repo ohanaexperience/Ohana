@@ -1,11 +1,10 @@
+# Expo
+.expo/
+.expo-shared/
 expo-env.d.ts
 
 # Node modules
 node_modules/
-
-# Expo
-.expo/
-.expo-shared/
 
 # TypeScript
 *.tsbuildinfo
@@ -13,43 +12,34 @@ node_modules/
 # macOS
 .DS_Store
 
-# Log files
+# Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Metro bundler cache
+# Metro / Babel / ESLint
 .cache/
-
-# Babel cache
 babel.config.js
-
-# ESLint cache
 .eslintcache
 
-# VS Code settings
+# VS Code
 .vscode/
 
-# Android
-android/.gradle
+# Android build artifacts
+android/.gradle/
+android/.idea/
 android/app/build/
-android/.idea
 
-# iOS
-ios/Pods/
+# iOS build artifacts
 ios/build/
-ios/.expo
+ios/Pods/
 ios/Podfile.lock
+ios/.expo/
 
 # Environment files
 .env
 .env.*
 
-# Testing
+# Test output
 coverage/
-
-# Misc
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-/android
-/ios
