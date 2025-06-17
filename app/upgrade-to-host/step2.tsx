@@ -16,6 +16,10 @@ import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
+import {
+  BACKEND_URL,
+} from '../env';
+
 export default function HostStep2() {
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
@@ -41,7 +45,7 @@ export default function HostStep2() {
 
   const fetchOptions = async () => {
     const res = await fetch(
-      'https://ikfwakanfh.execute-api.us-east-1.amazonaws.com/dev/v1/auth/id/verify',
+      BACKEND_URL+'/v1/auth/id/verify',
       {
         method: 'POST',
         headers: {

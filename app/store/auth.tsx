@@ -23,14 +23,19 @@ type AuthUser = {
 
 type AuthState = {
   user: AuthUser | null;
+  isHost: boolean;
   setUser: (user: AuthUser) => void;
+  setIsHost: (isHost: boolean) => void;
   signOut: () => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
+  isHost: false,
 
   setUser: (user) => set({ user }),
+
+  setIsHost: (isHost) => set({ isHost }),
 
   signOut: async () => {
     const { user } = get();
@@ -40,7 +45,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       } else if (user?.provider === 'facebook') {
         await LoginManager.logOut();
       }
-      set({ user: null });
+      set({ user: null, isHost: false });
       router.replace('/signin');
     } catch (err) {
       console.error('Sign out failed:', err);
