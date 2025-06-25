@@ -39,7 +39,6 @@ export const COMMON_STYLES = {
     marginBottom: 16,
     fontSize: FONT_SIZES.medium,
     backgroundColor: COLORS.background,
-    
   },
   button: {
     backgroundColor: COLORS.primary,

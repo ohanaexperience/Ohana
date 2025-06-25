@@ -23,6 +23,7 @@ import { useExperienceStore } from '../store/experience';
 import {
   BACKEND_URL,
 } from '../env';
+import { COLORS } from '@/constants/theme';
 
 export default function CreateExperienceStep1() {
   const router = useRouter();
@@ -128,7 +129,7 @@ export default function CreateExperienceStep1() {
         placeholder="Experience Title*"
         value={title}
         onChangeText={setTitle}
-        placeholderTextColor="#D3D3D3"
+        placeholderTextColor={COLORS.placeholder}
       />
       
       <TextInput
@@ -139,7 +140,7 @@ export default function CreateExperienceStep1() {
         maxLength={150}
         value={tagline}
         onChangeText={setTagline}
-        placeholderTextColor="#D3D3D3"
+        placeholderTextColor={COLORS.placeholder}
       />
 
       <DropDownPicker
@@ -218,7 +219,7 @@ export default function CreateExperienceStep1() {
         multiline
         value={description}
         onChangeText={setDescription}
-        placeholderTextColor="#D3D3D3"
+        placeholderTextColor={COLORS.placeholder}
       />
   {formErrors?.message ? (
   <Text style={{ color: 'red', marginTop: 8, textAlign: 'center' }}>

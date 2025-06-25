@@ -17,6 +17,7 @@ import { useAuthStore } from '../store/auth';
 import {
   BACKEND_URL,
 } from '../env';
+import { COLORS } from '@/constants/theme';
 
 export default function HostStep4() {
   const router = useRouter();
@@ -113,7 +114,7 @@ export default function HostStep4() {
         numberOfLines={4}
         value={aboutMe}
         onChangeText={setAboutMe}
-        placeholderTextColor="#D3D3D3"
+        placeholderTextColor={COLORS.placeholder}
       />
 
       {/* <Text style={styles.label}>Connect Social Media</Text>

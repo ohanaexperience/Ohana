@@ -6,6 +6,10 @@ import { useExperienceStore } from '../store/experience';
 import KeyboardAwareScreen from '../../components/KeyboardAwareScreen';
 import { useAuthStore } from '../store/auth';
 import tzLookup from 'tz-lookup';
+import {
+  BACKEND_URL,
+} from '../env';
+import { getMimeTypeFromUri } from '../utils/utils';
 
 export default function CreateExperienceStep7() {
   const router = useRouter();
@@ -82,26 +86,121 @@ export default function CreateExperienceStep7() {
     };
     console.log('Publishing experience with payload:', payload);
     try {
-      const res = await fetch('https://ikfwakanfh.execute-api.us-east-1.amazonaws.com/dev/v1/host/experiences', {
+        const res = await fetch(`${BACKEND_URL}/v1/host/experiences`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(payload),
-      });
+        });
 
-      if (!res.ok) {
+        if (!res.ok) {
         const errorText = await res.text();
         throw new Error(errorText);
-      }
+        }
 
-      Alert.alert('Success', 'Experience published successfully!');
-      console.log('response', res);
-      router.push('/');
-    } catch (err) {
-      console.error('Publish failed:', err);
-      Alert.alert('Error', 'Failed to publish experience');
+        const data = await res.json();
+        console.log('Published experience data:', data);
+        const experienceId = data.id;
+        console.log('Published experience ID:', experienceId);
+
+        // Gather image URIs from Zustand
+        // after receiving `experienceId` from the POST /experiences call...
+
+        const { coverPhotoUri, galleryUris } = useExperienceStore.getState().experienceImages;
+        const { imageUri: meetingImageUri } = useExperienceStore.getState().step2;
+
+        const images = [];
+
+        if (coverPhotoUri) {
+        images.push({ mimeType: getMimeTypeFromUri(coverPhotoUri), imageType: 'cover' });
+        }
+        if (Array.isArray(galleryUris)) {
+        for (const uri of galleryUris) {
+            images.push({ mimeType: getMimeTypeFromUri(uri), imageType: 'gallery' });
+        }
+        }
+        if (meetingImageUri) {
+        images.push({ mimeType: getMimeTypeFromUri(meetingImageUri), imageType: 'meeting-location' });
+        }
+
+        // 🔁 Step 1: Register image upload URLs
+        const uploadRes = await fetch(`${BACKEND_URL}/v1/host/experiences/image/upload-url`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ experienceId, images }),
+        });
+
+        if (!uploadRes.ok) {
+        const errorText = await uploadRes.text();
+        throw new Error(errorText);
+        }
+
+        const uploadUrls = await uploadRes.json();
+
+        // 🔁 Step 2: Upload image binaries to correct URLs
+        const uploadImage = async (uri: string, url: string) => {
+        const blob = await fetch(uri).then(r => r.blob());
+        const putRes = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Content-Type': blob.type },
+            body: blob,
+        });
+        if (!putRes.ok) throw new Error(`Failed to upload image: ${uri}`);
+        };
+
+        // 🔗 Map each URI to its corresponding URL
+        try {
+        const uploadPromises = [];
+
+        if (coverPhotoUri && uploadUrls.coverUploadUrl) {
+            uploadPromises.push(uploadImage(coverPhotoUri, uploadUrls.coverUploadUrl));
+        }
+
+        if (Array.isArray(galleryUris) && Array.isArray(uploadUrls.galleryUploadUrls)) {
+            galleryUris.forEach((uri, idx) => {
+            const url = uploadUrls.galleryUploadUrls[idx];
+            if (url) uploadPromises.push(uploadImage(uri, url));
+            });
+        }
+
+        if (meetingImageUri && Array.isArray(uploadUrls.meetingLocationUploadUrls)) {
+            // Assuming only one image for meeting-location
+            const meetingUrl = uploadUrls.meetingLocationUploadUrls[0];
+            if (meetingUrl) uploadPromises.push(uploadImage(meetingImageUri, meetingUrl));
+        }
+
+        await Promise.all(uploadPromises);
+        console.log('✅ All images uploaded successfully');
+        } catch (uploadErr) {
+        console.error('❌ Image upload failed:', uploadErr);
+        throw new Error('Image upload failed');
+        }
+
+        Alert.alert('Success', 'Experience published successfully!');
+        router.push('/');
+    } catch (err: any) {
+        console.error('Publish failed:', err);
+
+        let errorMessage = 'Failed to publish experience';
+
+        try {
+        const parsed = JSON.parse(err.message);
+        if (parsed?.message) {
+            console.log('*****', parsed.message);
+            errorMessage = parsed.message;
+        }
+        } catch {
+        if (err?.message) {
+            errorMessage = err.message;
+        }
+        }
+
+        Alert.alert('Error', errorMessage);
     }
   };
 

@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useNavigation } from 'expo-router';
+import { COLORS } from '@/constants/theme';
 
 export default function HostStep1() {
   const router = useRouter();
@@ -68,7 +69,7 @@ export default function HostStep1() {
           placeholder="Full Name"
           value={fullName}
           onChangeText={setFullName}
-          placeholderTextColor="#D3D3D3"
+          placeholderTextColor={COLORS.placeholder}
         />
         <TextInput
           style={styles.input}
@@ -77,7 +78,7 @@ export default function HostStep1() {
           autoCapitalize="none"
           value={email}
           onChangeText={setEmail}
-          placeholderTextColor="#D3D3D3"
+          placeholderTextColor={COLORS.placeholder}
         />
         <TextInput
           style={styles.input}
@@ -85,7 +86,7 @@ export default function HostStep1() {
           keyboardType="phone-pad"
           value={phone}
           onChangeText={setPhone}
-          placeholderTextColor="#D3D3D3"
+          placeholderTextColor={COLORS.placeholder}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleContinue}>
