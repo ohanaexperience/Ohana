@@ -17,6 +17,7 @@ import { useAuthStore } from '../store/auth';
 import {
   BACKEND_URL,
 } from '../env';
+import { COLORS } from '@/constants/theme';
 
 export default function HostStep4() {
   const router = useRouter();
@@ -113,7 +114,7 @@ export default function HostStep4() {
         numberOfLines={4}
         value={aboutMe}
         onChangeText={setAboutMe}
-        placeholderTextColor="#D3D3D3"
+        placeholderTextColor={COLORS.placeholder}
       />
 
       {/* <Text style={styles.label}>Connect Social Media</Text>
@@ -127,11 +128,14 @@ export default function HostStep4() {
         </Text>
       </View> */}
 
-      <TouchableOpacity style={styles.primaryButton}>
+      <TouchableOpacity 
+        style={styles.primaryButton}
+        onPress={() => router.push('/create-experience/step1')}
+        >
         <Text style={styles.buttonText}>Create Your First Experience</Text>
       </TouchableOpacity>
 
-      <Text style={styles.secondaryText}>I'll Set Up My Experience Later</Text>
+      <Text style={styles.secondaryText} onPress={() => router.replace('/(tabs)')}>I'll Set Up My Experience Later</Text>
     </SafeAreaView>
     </TouchableWithoutFeedback>
   );

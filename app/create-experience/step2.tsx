@@ -19,6 +19,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter, useNavigation } from 'expo-router';
 import KeyboardAwareScreen from '../../components/KeyboardAwareScreen';
 import { useExperienceStore } from '../store/experience';
+import { COLORS } from '@/constants/theme';
 
 export default function CreateExperienceStep2() {
   const router = useRouter();
@@ -134,7 +135,7 @@ export default function CreateExperienceStep2() {
       console.warn('Geocode failed', e);
     }
   };
-console.log('Step 2 Form State:', step2)
+// console.log('Step 2 Form State:', step2)
   return (
     <KeyboardAwareScreen>
       <Text style={styles.stepText}>Step 2 of 7</Text>
@@ -171,6 +172,7 @@ console.log('Step 2 Form State:', step2)
       </MapView>
       <TextInput
         style={styles.input}
+        placeholderTextColor={COLORS.placeholder}
         placeholder="Enter address"
         value={startingAddress}
         onChangeText={updateStartingLocationFromAddress}
@@ -223,6 +225,7 @@ console.log('Step 2 Form State:', step2)
           </MapView>
           <TextInput
             style={styles.input}
+            placeholderTextColor={COLORS.placeholder}
             placeholder="Enter address"
             value={endingAddress}
             onChangeText={updateEndingLocationFromAddress}
@@ -233,6 +236,7 @@ console.log('Step 2 Form State:', step2)
       <Text style={styles.sectionTitle}>Meeting Instructions*</Text>
       <TextInput
         style={[styles.input, { height: 100, textAlignVertical: 'top' }]}
+        placeholderTextColor={COLORS.placeholder}
         placeholder="Provide detailed instructions for finding the meeting point"
         value={meetingInstructions}
         onChangeText={(text) => {

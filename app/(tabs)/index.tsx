@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,44 +10,48 @@ import {
   FlatList,
 } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { BACKEND_URL } from '@/app/env';
 
 const categories = ['Photography', 'Nightlife', 'Gaming', 'Food', 'Art', 'Fitness'];
-const experiences = [
-  {
-    id: '1',
-    image: 'https://source.unsplash.com/random/400x200?party',
-    name: 'Beach Party',
-    description: 'Enjoy a beachside party with music and food.',
-    price: '$25',
-  },
-  {
-    id: '2',
-    image: 'https://source.unsplash.com/random/400x200?camera',
-    name: 'Photography Walk',
-    description: 'Explore the city through a photographer’s lens.',
-    price: '$15',
-  },
-  {
-    id: '3',
-    image: 'https://source.unsplash.com/random/400x200?camera',
-    name: 'Sasquatch Hunt',
-    description: 'Find the real deal.',
-    price: '$15',
-  },
-];
 
 export default function ExperienceFeedScreen() {
-  const [selectedLocation, setSelectedLocation] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
+  
+  
+  const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [experiences, setExperiences] = useState<any[]>([]);
 
-  const toggleCategory = (category: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category]
-    );
-  };
+  useEffect(() => {
+    const fetchExperiences = async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/v1/experiences/public?isPublic=true`);
+        const data = await res.json();
+        
+        setExperiences(data);
+      } catch (err) {
+        // console.error('Failed to load experiences:', err);
+      }
+    };
+
+    fetchExperiences();
+  }, []);
+
+    useEffect(() => {
+      const fetchCategories = async () => {
+        try {
+          const res = await fetch(`${BACKEND_URL}/v1/categories/public`);
+          const data = await res.json();
+
+          setCategories(data);
+        } catch (err) {
+          // console.error('Failed to load experiences:', err);
+        }
+      };
+
+      fetchCategories();
+    }, []);
+
+
 
   return (
     <View style={styles.container}>
@@ -66,40 +70,35 @@ export default function ExperienceFeedScreen() {
       </View>
 
       {/* Filters */}
-      <View style={styles.filterRowLeftAligned}>
-        <TouchableOpacity style={styles.filterButton}>
-          <Ionicons name="location-outline" size={16} />
-          <Text style={styles.filterText}>Location</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <MaterialIcons name="date-range" size={16} />
-          <Text style={styles.filterText}>Date</Text>
-        </TouchableOpacity>
-      </View>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryScroll}>
-        {categories.map((category) => (
+      {/* <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryScroll}>
+        {categories.map((category: any) => (
           <TouchableOpacity
-            key={category}
+            key={category.id}
             style={[
               styles.categoryButton,
-              selectedCategories.includes(category) && styles.categorySelected,
+              selectedCategories.includes(category.id) && styles.categorySelected,
             ]}
-            onPress={() => toggleCategory(category)}
+            onPress={() => {
+              setSelectedCategories((prev) =>
+                prev.includes(category.id)
+                  ? prev.filter((id) => id !== category.id)
+                  : [...prev, category.id]
+              );
+              // OPTIONAL: fetch filtered experiences here
+            }}
           >
             <Text
               style={[
                 styles.categoryText,
-                selectedCategories.includes(category) && styles.categoryTextSelected,
+                selectedCategories.includes(category.id) && styles.categoryTextSelected,
               ]}
-              numberOfLines={1}
-              adjustsFontSizeToFit
             >
-              {category}
+              {category.name}
             </Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </ScrollView> */}
 
       {/* Experiences List */}
       <FlatList
@@ -108,11 +107,11 @@ export default function ExperienceFeedScreen() {
         contentContainerStyle={styles.cardList}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Image source={{ uri: item.image }} style={styles.cardImage} />
+            <Image source={{ uri: item.coverImageUrl }} style={styles.cardImage} />
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>{item.name}</Text>
-              <Text style={styles.cardDescription}>{item.description}</Text>
-              <Text style={styles.cardPrice}>{item.price}</Text>
+              <Text style={styles.cardTitle}>{item.title}</Text>
+              <Text style={styles.cardDescription}>{item.tagline}</Text>
+              <Text style={styles.cardPrice}>${(item.pricePerPerson / 100).toFixed(2)}</Text>
             </View>
           </View>
         )}
@@ -157,16 +156,31 @@ const styles = StyleSheet.create({
   filterText: { marginLeft: 6 },
   categoryScroll: { paddingLeft: 20, marginBottom: 10 },
   categoryButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: '#eee',
-    borderRadius: 20,
-    marginRight: 10,
-    justifyContent: 'center',
-  },
-  categorySelected: { backgroundColor: '#000' },
-  categoryText: { color: '#000', fontSize: 14 },
-  categoryTextSelected: { color: '#fff', fontSize: 14 },
+  paddingHorizontal: 16,
+  paddingVertical: 12, // increased from 8
+  backgroundColor: '#eee',
+  borderRadius: 24, // slightly more rounded for better look
+  marginRight: 10,
+  justifyContent: 'center',
+  alignItems: 'center',
+  minHeight: 48, // ensure a minimum touch area
+},
+
+categoryText: {
+  color: '#000',
+  fontSize: 16, // slightly larger text
+  fontWeight: '500',
+},
+
+categoryTextSelected: {
+  color: '#fff',
+  fontSize: 16,
+  fontWeight: '600',
+},
+
+categorySelected: {
+  backgroundColor: '#000',
+},
   cardList: { paddingHorizontal: 20, paddingBottom: 100 },
   card: {
     backgroundColor: '#fff',

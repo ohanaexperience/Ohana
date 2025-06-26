@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -37,8 +37,11 @@ export default function ProfileScreen() {
   const isLoggedIn = useIsLoggedIn();
   const isHost = useAuthStore((s) => s.isHost);
 
+  const hasRedirected = useRef(false);
+
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn && !hasRedirected.current) {
+      hasRedirected.current = true;
       router.push('/signin');
     }
   }, [isLoggedIn]);
@@ -55,7 +58,7 @@ export default function ProfileScreen() {
     if (isHost) {
       baseOptions.unshift({
         id: '0',
-        icon: 'plus-circle-outline',
+        icon: 'add-circle-outline',
         label: 'Create an Experience',
         iconPack: 'Ionicons',
       });
@@ -63,7 +66,13 @@ export default function ProfileScreen() {
     return baseOptions;
   }, [isHost]);
 
-  if (!user) return null;
+  if (!isLoggedIn || !user) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading profile...</Text>
+      </View>
+    );
+  }
 
   const handleOptionPress = (label: string) => {
     if (label === 'Settings') {
@@ -88,10 +97,10 @@ export default function ProfileScreen() {
     <View style={styles.container}>
       <View style={styles.profileRow}>
         <View style={styles.userInfo}>
-          <Text style={styles.name}>{user.name}</Text>
+          <Text style={styles.name}>{user?.name ?? 'Guest'}</Text>
           {renderRatingBox()}
         </View>
-        <Image source={{ uri: user.photo ?? 'https://i.pravatar.cc/150?img=32' }} style={styles.avatar} />
+        <Image source={{ uri: user?.photo ?? 'https://i.pravatar.cc/150?img=32' }} style={styles.avatar} />
       </View>
 
       <FlatList

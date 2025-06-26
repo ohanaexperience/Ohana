@@ -11,6 +11,17 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { StripeProvider } from '@stripe/stripe-react-native';
 
+if (__DEV__ === false) {
+  const defaultHandler = ErrorUtils.getGlobalHandler?.();
+
+  ErrorUtils.setGlobalHandler((error, isFatal) => {
+    console.log('🔥 Uncaught JS Error:', error.message, error.stack);
+    if (defaultHandler) {
+      defaultHandler(error, isFatal);
+    }
+  });
+}
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 

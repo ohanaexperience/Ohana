@@ -206,7 +206,7 @@ export default function CreateExperienceStep3() {
           value={basePrice}
           onChangeText={setBasePrice}
           placeholder="$ 0.00"
-          placeholderTextColor={COLORS.gray}
+          placeholderTextColor={COLORS.placeholder}
           keyboardType="numeric"
         />
         {errors.basePrice && <Text style={errorStyle}>{errors.basePrice}</Text>}

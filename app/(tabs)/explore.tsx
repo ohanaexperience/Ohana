@@ -31,7 +31,7 @@ const EVENTS = [
 
 export default function ExploreScreen() {
   const router = useRouter();
-
+  console.log('ExploreScreen rendered 777');
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}> 
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
