@@ -49,15 +49,25 @@ export default function SignInScreen() {
         );
         if (!backendResponse.ok)
           throw new Error('Backend verification failed');
+        const json = await backendResponse.json();
 
+        let tokenData;
+
+        try {
+          tokenData = JSON.parse(json.body); // because json.body is still a JSON string
+        } catch (e) {
+          console.error('Failed to parse token body:', e);
+          throw new Error('Invalid token response');
+        }
+        console.log('Backend response:', json);
         const {
           AccessToken,
           ExpiresIn,
           IdToken,
           RefreshToken,
           TokenType,
-        } = await backendResponse.json();
-
+        } = tokenData;
+      
         setUser({
           provider: 'google',
           id: user.id,
@@ -72,7 +82,7 @@ export default function SignInScreen() {
             tokenType: TokenType,
           },
         });
-
+        
         const hostRes = await fetch(
         BACKEND_URL+'/v1/host/profile',
         {

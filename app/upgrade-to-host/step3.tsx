@@ -128,11 +128,14 @@ export default function HostStep4() {
         </Text>
       </View> */}
 
-      <TouchableOpacity style={styles.primaryButton}>
+      <TouchableOpacity 
+        style={styles.primaryButton}
+        onPress={() => router.push('/create-experience/step1')}
+        >
         <Text style={styles.buttonText}>Create Your First Experience</Text>
       </TouchableOpacity>
 
-      <Text style={styles.secondaryText}>I'll Set Up My Experience Later</Text>
+      <Text style={styles.secondaryText} onPress={() => router.replace('/(tabs)')}>I'll Set Up My Experience Later</Text>
     </SafeAreaView>
     </TouchableWithoutFeedback>
   );
