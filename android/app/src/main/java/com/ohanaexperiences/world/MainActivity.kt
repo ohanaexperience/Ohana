@@ -1,4 +1,4 @@
-package com.ohanaexperiences.expoapp
+package com.ohanaexperiences.world
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build
