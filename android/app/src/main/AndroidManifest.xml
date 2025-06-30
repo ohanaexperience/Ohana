@@ -40,7 +40,7 @@
       </intent-filter>
       <intent-filter data-generated="true">
         <action android:name="android.intent.action.VIEW"/>
-        <data android:scheme="com.ohanaexperiences.expoapp"/>
+        <data android:scheme="com.ohanaexperiences.world"/>
         <data android:scheme="exp+ohanaapp"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <category android:name="android.intent.category.DEFAULT"/>
